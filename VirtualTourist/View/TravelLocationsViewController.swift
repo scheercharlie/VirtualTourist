@@ -10,11 +10,20 @@ import Foundation
 import UIKit
 import MapKit
 
-class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
+class TravelLocationsViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupGestureRecognizer()
+    }
 
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
         if let savedMapLocation = MapLocation.getSavedMapLocation() {
             mapView.centerCoordinate = savedMapLocation.getLocationCoordinate()
             mapView.region.span = savedMapLocation.getLocationDelta()
@@ -23,21 +32,17 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    
-    override func viewWillDisappear(_ animated: Bool) {
+    func setupGestureRecognizer() {
+        let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        gestureRecognizer.minimumPressDuration = 0.5
+        gestureRecognizer.delaysTouchesBegan = true
+        gestureRecognizer.delegate = self
         
+        self.mapView.addGestureRecognizer(gestureRecognizer)
     }
-    
-    func getMapCurrentCenterPoint() -> CLLocationCoordinate2D {
-        let center = mapView.centerCoordinate
         
-        return center
-    }
-    
-    func getMapZoom() -> MKCoordinateSpan {
-        let span = mapView.region.span
-        
-        return span
+    @objc func handleLongPress() {
+        print("that was a long press")
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
