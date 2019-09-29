@@ -15,6 +15,14 @@ struct MapViewLocationAndSpan: Codable {
     let longitudeDelta: Double
     let latitudeDelta: Double
     
+    init(coordinate: CLLocationCoordinate2D, span: MKCoordinateSpan) {
+        self.longitude = Double(coordinate.longitude)
+        self.latitude = Double(coordinate.latitude)
+        self.longitudeDelta = Double(span.longitudeDelta)
+        self.latitudeDelta = Double(span.latitudeDelta)
+        
+        print(longitude, latitude, longitudeDelta, latitudeDelta)
+    }
     
     func getLocationCoordinate() -> CLLocationCoordinate2D {
         guard let longitudeCoordinate = CLLocationDegrees(exactly: longitude), let latitudeCoordinate = CLLocationDegrees(exactly: latitude) else{

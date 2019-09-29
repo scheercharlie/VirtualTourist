@@ -30,5 +30,7 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         print("Map moved")
+        
+        let mapLocation = MapViewLocationAndSpan(coordinate: mapView.centerCoordinate, span: mapView.region.span)
     }
 }
