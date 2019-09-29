@@ -13,6 +13,8 @@
 		BA4C5170234058410024188C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA4C516F234058410024188C /* Assets.xcassets */; };
 		BA4C5173234058410024188C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA4C5172234058410024188C /* Preview Assets.xcassets */; };
 		BA4C5176234058410024188C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA4C5174234058410024188C /* LaunchScreen.storyboard */; };
+		BA4C51AE234061D40024188C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4C51AD234061D40024188C /* MapViewController.swift */; };
+		BA4C51B0234061F40024188C /* MapStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA4C51AF234061F40024188C /* MapStoryboard.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		BA4C5172234058410024188C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BA4C5175234058410024188C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BA4C5177234058410024188C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BA4C51AD234061D40024188C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		BA4C51AF234061F40024188C /* MapStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MapStoryboard.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,9 +62,10 @@
 			children = (
 				BA4C51692340583C0024188C /* AppDelegate.swift */,
 				BA4C516B2340583C0024188C /* SceneDelegate.swift */,
-				BA4C516D2340583C0024188C /* ContentView.swift */,
+				BA4C51AC234061890024188C /* Storyboards */,
+				BA4C51AB2340617B0024188C /* View */,
+				BA4C51AA234061730024188C /* Model */,
 				BA4C516F234058410024188C /* Assets.xcassets */,
-				BA4C5174234058410024188C /* LaunchScreen.storyboard */,
 				BA4C5177234058410024188C /* Info.plist */,
 				BA4C5171234058410024188C /* Preview Content */,
 			);
@@ -73,6 +78,31 @@
 				BA4C5172234058410024188C /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		BA4C51AA234061730024188C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		BA4C51AB2340617B0024188C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				BA4C516D2340583C0024188C /* ContentView.swift */,
+				BA4C51AD234061D40024188C /* MapViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		BA4C51AC234061890024188C /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				BA4C5174234058410024188C /* LaunchScreen.storyboard */,
+				BA4C51AF234061F40024188C /* MapStoryboard.storyboard */,
+			);
+			path = Storyboards;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,6 +165,7 @@
 			files = (
 				BA4C5176234058410024188C /* LaunchScreen.storyboard in Resources */,
 				BA4C5173234058410024188C /* Preview Assets.xcassets in Resources */,
+				BA4C51B0234061F40024188C /* MapStoryboard.storyboard in Resources */,
 				BA4C5170234058410024188C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -149,6 +180,7 @@
 				BA4C516A2340583C0024188C /* AppDelegate.swift in Sources */,
 				BA4C516C2340583C0024188C /* SceneDelegate.swift in Sources */,
 				BA4C516E2340583C0024188C /* ContentView.swift in Sources */,
+				BA4C51AE234061D40024188C /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
