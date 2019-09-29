@@ -15,6 +15,7 @@
 		BA4C5176234058410024188C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA4C5174234058410024188C /* LaunchScreen.storyboard */; };
 		BA4C51AE234061D40024188C /* TravelLocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4C51AD234061D40024188C /* TravelLocationsViewController.swift */; };
 		BA4C51B0234061F40024188C /* MapStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA4C51AF234061F40024188C /* MapStoryboard.storyboard */; };
+		BA68511C234066D300F85F47 /* MapViewLocationAndSpan.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA68511B234066D300F85F47 /* MapViewLocationAndSpan.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		BA4C5177234058410024188C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BA4C51AD234061D40024188C /* TravelLocationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelLocationsViewController.swift; sourceTree = "<group>"; };
 		BA4C51AF234061F40024188C /* MapStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MapStoryboard.storyboard; sourceTree = "<group>"; };
+		BA68511B234066D300F85F47 /* MapViewLocationAndSpan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewLocationAndSpan.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 		BA4C51AA234061730024188C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				BA68511B234066D300F85F47 /* MapViewLocationAndSpan.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -179,6 +182,7 @@
 			files = (
 				BA4C516A2340583C0024188C /* AppDelegate.swift in Sources */,
 				BA4C516C2340583C0024188C /* SceneDelegate.swift in Sources */,
+				BA68511C234066D300F85F47 /* MapViewLocationAndSpan.swift in Sources */,
 				BA4C516E2340583C0024188C /* ContentView.swift in Sources */,
 				BA4C51AE234061D40024188C /* TravelLocationsViewController.swift in Sources */,
 			);

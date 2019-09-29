@@ -13,6 +13,22 @@ import MapKit
 class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
+
+    
+    func getMapCurrentCenterPoint() -> CLLocationCoordinate2D {
+        let center = mapView.centerCoordinate
+        
+        return center
+    }
+    
+    func getMapZoom() -> MKCoordinateSpan {
+        let span = mapView.region.span
+        
+        return span
+    }
     
     
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        print("Map moved")
+    }
 }
