@@ -41,9 +41,18 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, UIGest
         self.mapView.addGestureRecognizer(gestureRecognizer)
     }
         
-    @objc func handleLongPress() {
+    @objc func handleLongPress(gestureRecognizer : UILongPressGestureRecognizer) {
         print("that was a long press")
+        let location = gestureRecognizer.location(in: mapView)
+        let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
+        
+        let point = MKPointAnnotation()
+        point.coordinate = coordinate
+        
+        mapView.addAnnotation(point)
     }
+    
+    
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         let currentMapLocation = MapLocation.init(coordinate: mapView.centerCoordinate, span: mapView.region.span)
