@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import MapKit
 
-class TravelLocationsViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
+class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -48,15 +48,38 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate, UIGest
         
         let point = MKPointAnnotation()
         point.coordinate = coordinate
+        point.title = "title"
         
         mapView.addAnnotation(point)
     }
-    
-    
+
+}
+
+extension TravelLocationsViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         let currentMapLocation = MapLocation.init(coordinate: mapView.centerCoordinate, span: mapView.region.span)
         currentMapLocation.saveMapViewLocationToUserDefaults()
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let reuse = "pin"
+        
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuse) as? MKPinAnnotationView
+        
+        if pinView == nil {
+            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuse)
+            pinView!.tintColor = UIColor.red
+        } else {
+            pinView!.annotation = annotation
+        }
+        
+        return pinView
+    }
+    
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        print("pin selected")
     }
 
 }
