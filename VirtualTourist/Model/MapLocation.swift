@@ -54,11 +54,6 @@ struct MapLocation: Codable {
         do {
             let encodedMapLocation = try encoder.encode(self)
             UserDefaults.standard.set(encodedMapLocation, forKey: constants.mapLocation)
-            print("encode successful")
-            
-            if UserDefaults.standard.object(forKey: constants.mapLocation) != nil {
-                print("save successful")
-            }
         } catch {
             print("Location Encode Failed")
         }
