@@ -9,7 +9,7 @@
 import Foundation
 import MapKit
 
-struct MapViewLocationAndSpan: Codable {
+struct MapLocation: Codable {
     let longitude: Double
     let latitude: Double
     let longitudeDelta: Double
@@ -46,5 +46,43 @@ struct MapViewLocationAndSpan: Codable {
         let span = MKCoordinateSpan(latitudeDelta: latitudeDeltaCoordinate, longitudeDelta: longitudeDeltaCooridnate)
         
         return span
+    }
+    
+    func saveMapViewLocationToUserDefaults() {
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let encodedMapLocation = try encoder.encode(self)
+            UserDefaults.standard.set(encodedMapLocation, forKey: constants.mapLocation)
+            print("encode successful")
+            
+            if UserDefaults.standard.object(forKey: constants.mapLocation) != nil {
+                print("save successful")
+            }
+        } catch {
+            print("Location Encode Failed")
+        }
+    }
+    
+    static func getSavedMapLocation() -> MapLocation? {
+        let decoder = PropertyListDecoder()
+        guard let encodedMapLocation = UserDefaults.standard.data(forKey: constants.mapLocation) else {
+            print("couldn't get data")
+            return nil
+        }
+        
+        do {
+            let decodedMapLocation = try decoder.decode(MapLocation.self, from: encodedMapLocation)
+            return decodedMapLocation
+        } catch {
+            print("couldn't decode location")
+            return nil
+        }
+    }
+}
+
+extension MapLocation {
+    enum constants {
+        static let mapLocation = "MapLocation"
     }
 }

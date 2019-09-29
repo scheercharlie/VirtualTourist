@@ -15,6 +15,10 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
 
     
+    override func viewWillDisappear(_ animated: Bool) {
+        
+    }
+    
     func getMapCurrentCenterPoint() -> CLLocationCoordinate2D {
         let center = mapView.centerCoordinate
         
@@ -27,10 +31,10 @@ class TravelLocationsViewController: UIViewController, MKMapViewDelegate {
         return span
     }
     
-    
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         print("Map moved")
-        
-        let mapLocation = MapViewLocationAndSpan(coordinate: mapView.centerCoordinate, span: mapView.region.span)
+        let currentMapLocation = MapLocation.init(coordinate: mapView.centerCoordinate, span: mapView.region.span)
+        currentMapLocation.saveMapViewLocationToUserDefaults()
     }
+
 }
