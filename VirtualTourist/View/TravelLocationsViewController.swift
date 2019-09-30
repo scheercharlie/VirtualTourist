@@ -75,6 +75,17 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
 
 extension TravelLocationsViewController: MKMapViewDelegate {
     
+    func mapViewDidFailLoadingMap(_ mapView: MKMapView, withError error: Error) {
+        let error = error as NSError
+
+        switch error.code {
+        case -1009:
+            presentNoActionAlert(title: "No Interent Connection", message: "Please connect to the internet and try again")
+        default:
+            presentNoActionAlert(title: "Loading Map Failed", message: error.localizedDescription)
+        }
+    }
+    
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         let currentMapLocation = MapLocation.init(coordinate: mapView.centerCoordinate, span: mapView.region.span)
         currentMapLocation.saveMapViewLocationToUserDefaults()
