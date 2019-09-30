@@ -15,10 +15,14 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
     @IBOutlet weak var mapView: MKMapView!
     
     var dataController: DataController!
+    var mapViewDelegate: MapViewDelegate!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        mapViewDelegate = MapViewDelegate(viewController: self)
+        mapView.delegate = mapViewDelegate
         
         setupGestureRecognizer()
     }
@@ -70,58 +74,10 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
             presentNoActionAlert(title:"Save Failed", message:"Could not save the pin location, try again")
         }
     }
-
-}
-
-extension TravelLocationsViewController: MKMapViewDelegate {
-    
-    func mapViewDidFailLoadingMap(_ mapView: MKMapView, withError error: Error) {
-        let error = error as NSError
-
-        switch error.code {
-        case -1009:
-            presentNoActionAlert(title: "No Interent Connection", message: "Please connect to the internet and try again")
-        default:
-            presentNoActionAlert(title: "Loading Map Failed", message: error.localizedDescription)
-        }
-    }
-    
-    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        let currentMapLocation = MapLocation.init(coordinate: mapView.centerCoordinate, span: mapView.region.span)
-        currentMapLocation.saveMapViewLocationToUserDefaults()
-    }
-    
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let reuse = "pin"
-        
-        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuse) as? MKPinAnnotationView
-        
-        if pinView == nil {
-            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuse)
-            pinView!.tintColor = UIColor.red
-        } else {
-            pinView!.annotation = annotation
-        }
-        
-        return pinView
-    }
-    
-    
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        print("pin selected")
-        performSegue(withIdentifier: constants.showPhotoAlbum, sender: self)
-        
-    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         print("segue prepared")
+    
     }
 
-}
-
-
-extension TravelLocationsViewController {
-    enum constants {
-        static let showPhotoAlbum = "showPhotoAlbumView"
-    }
 }

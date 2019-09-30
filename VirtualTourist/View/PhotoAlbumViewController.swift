@@ -18,5 +18,7 @@ class PhotoAlbumViewController: UIViewController {
         print("gallery view")
     }
     
+    
+    //TO DO: Make map un selectable/un zoomable/etc
 }
 

@@ -20,6 +20,7 @@
 		BAECE84523423176001989ED /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAECE84423423176001989ED /* PhotoAlbumViewController.swift */; };
 		BAECE847234234F4001989ED /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAECE846234234F4001989ED /* DataController.swift */; };
 		BAECE84B234253E2001989ED /* UIViewController+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAECE84A234253E2001989ED /* UIViewController+Helpers.swift */; };
+		BAECE84D234258AC001989ED /* MapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAECE84C234258AC001989ED /* MapViewDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		BAECE84423423176001989ED /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 		BAECE846234234F4001989ED /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		BAECE84A234253E2001989ED /* UIViewController+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Helpers.swift"; sourceTree = "<group>"; };
+		BAECE84C234258AC001989ED /* MapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 				BA68511B234066D300F85F47 /* MapLocation.swift */,
 				BAECE841234073F7001989ED /* VirtualTourist.xcdatamodeld */,
 				BAECE846234234F4001989ED /* DataController.swift */,
+				BAECE84C234258AC001989ED /* MapViewDelegate.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -198,6 +201,7 @@
 				BAECE843234073F7001989ED /* VirtualTourist.xcdatamodeld in Sources */,
 				BAECE84B234253E2001989ED /* UIViewController+Helpers.swift in Sources */,
 				BA68511C234066D300F85F47 /* MapLocation.swift in Sources */,
+				BAECE84D234258AC001989ED /* MapViewDelegate.swift in Sources */,
 				BAECE847234234F4001989ED /* DataController.swift in Sources */,
 				BA4C516E2340583C0024188C /* ContentView.swift in Sources */,
 				BA4C51AE234061D40024188C /* TravelLocationsViewController.swift in Sources */,
