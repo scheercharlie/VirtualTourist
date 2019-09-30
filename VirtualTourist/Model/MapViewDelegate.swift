@@ -8,12 +8,25 @@
 
 import Foundation
 import MapKit
+import CoreData
 
-class MapViewDelegate: NSObject, MKMapViewDelegate {
+class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDelegate {
     var viewController: UIViewController!
+    var fetchedResultsController: NSFetchedResultsController<Pin>!
     
-    init(viewController: UIViewController) {
+    init(viewController: UIViewController, fetchRequest: NSFetchRequest<Pin>?, managedObjectContext: NSManagedObjectContext?) {
         self.viewController = viewController
+        
+        if let fetchRequest = fetchRequest, let managedObjectContext = managedObjectContext {
+            fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+            
+            //TO DO: Do a better job of handling the fetch errors
+            do {
+                try fetchedResultsController.performFetch()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
     func mapViewDidFailLoadingMap(_ mapView: MKMapView, withError error: Error) {
         let error = error as NSError
