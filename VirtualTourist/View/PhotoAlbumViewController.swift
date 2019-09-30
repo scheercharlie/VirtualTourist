@@ -11,9 +11,12 @@ import UIKit
 import MapKit
 
 class PhotoAlbumViewController: UIViewController {
+    //MARK: View Properties
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     
+    
+    //MARK: View life cycle Methods
     override func viewDidLoad() {
         print("gallery view")
     }

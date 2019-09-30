@@ -6,6 +6,9 @@
 //  Copyright © 2019 Praxsis. All rights reserved.
 //
 
+
+//A Struct to save and return the previous map center location and zoom
+
 import Foundation
 import MapKit
 
@@ -24,6 +27,10 @@ struct MapLocation: Codable {
         print(longitude, latitude, longitudeDelta, latitudeDelta)
     }
     
+    
+    //MARK: Calculate and Return functions:
+    
+    //Return a CLLocationCoordinate 2D using the MapLocation's latitude and longitude
     func getLocationCoordinate() -> CLLocationCoordinate2D {
         guard let longitudeCoordinate = CLLocationDegrees(exactly: longitude), let latitudeCoordinate = CLLocationDegrees(exactly: latitude) else{
             print("Couldn't convert location to coordinates")
@@ -32,10 +39,10 @@ struct MapLocation: Codable {
         
         let location = CLLocationCoordinate2D(latitude: latitudeCoordinate, longitude: longitudeCoordinate)
         
-        
         return location
     }
     
+    //Return a MKCoordinateSpan using the MapLocation's deltas
     func getLocationDelta() -> MKCoordinateSpan {
         guard let latitudeDeltaCoordinate = CLLocationDegrees(exactly: latitudeDelta),
             let longitudeDeltaCooridnate = CLLocationDegrees(exactly: longitudeDelta) else {
@@ -48,6 +55,9 @@ struct MapLocation: Codable {
         return span
     }
     
+    //MARK: Save and Restore functions:
+    
+    //Encode location and save the data to UserDefaults
     func saveMapViewLocationToUserDefaults() {
         let encoder = PropertyListEncoder()
         
@@ -59,6 +69,7 @@ struct MapLocation: Codable {
         }
     }
     
+    //Fetch stored location from UserDefaults, decode to MapLocation, if successful return MapLocation
     static func getSavedMapLocation() -> MapLocation? {
         let decoder = PropertyListDecoder()
         guard let encodedMapLocation = UserDefaults.standard.data(forKey: constants.mapLocation) else {
@@ -76,7 +87,9 @@ struct MapLocation: Codable {
     }
 }
 
+
 extension MapLocation {
+    //MARK: Stored Constants:
     enum constants {
         static let mapLocation = "MapLocation"
     }

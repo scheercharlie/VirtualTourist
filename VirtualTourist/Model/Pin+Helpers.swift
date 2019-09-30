@@ -16,6 +16,7 @@ extension Pin {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
+    //Return an MKPointAnnotation using the saved Longitude/Latitude for a pin
     func getPoint() -> MKPointAnnotation {
         let point = MKPointAnnotation()
         point.coordinate.latitude = latitude

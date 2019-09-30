@@ -97,8 +97,8 @@
 		BA4C51AA234061730024188C /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				BA68511B234066D300F85F47 /* MapLocation.swift */,
 				BAECE841234073F7001989ED /* VirtualTourist.xcdatamodeld */,
+				BA68511B234066D300F85F47 /* MapLocation.swift */,
 				BAECE846234234F4001989ED /* DataController.swift */,
 				BAECE84C234258AC001989ED /* MapViewDelegate.swift */,
 				BAECE84E23426389001989ED /* Pin+Helpers.swift */,

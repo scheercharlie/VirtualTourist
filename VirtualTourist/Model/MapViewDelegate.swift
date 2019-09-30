@@ -33,6 +33,7 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
         }
     }
     
+    //Handle errors with the map loading
     func mapViewDidFailLoadingMap(_ mapView: MKMapView, withError error: Error) {
         let error = error as NSError
 
@@ -44,11 +45,14 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
         }
     }
     
+    //Functions for when the map view changes
+    //Save new location to UserDefaults
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         let currentMapLocation = MapLocation.init(coordinate: mapView.centerCoordinate, span: mapView.region.span)
         currentMapLocation.saveMapViewLocationToUserDefaults()
     }
     
+    //Setup the appearance of pins for the map view
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuse = "pin"
         
@@ -64,13 +68,17 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
         return pinView
     }
     
-    
+    //When a pin is selected:
+    //Transition to the PhotoAlbumViewController
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         print("pin selected")
         viewController.performSegue(withIdentifier: constants.showPhotoAlbum, sender: self)
     }
     
+    //When map finishes loading:
     func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
+        //If there is a fetched results controller:
+        //Create an array for all of the saved pins and display them
         if needsFetch {
             guard let fetchedPins = fetchedResultsController.fetchedObjects else {
                 print("no results controller")
@@ -88,6 +96,7 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
 }
 
 extension MapViewDelegate {
+    //Saved constants for MapViewDelegate
     enum constants {
         static let showPhotoAlbum = "showPhotoAlbumView"
     }

@@ -12,13 +12,13 @@ import MapKit
 import CoreData
 
 class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelegate {
-    
+    //MARK: View Properties
     @IBOutlet weak var mapView: MKMapView!
     
     var dataController: DataController!
     var mapViewDelegate: MapViewDelegate!
     
-    
+    //MARK: View Life Cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -43,6 +43,7 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         }
     }
     
+    //MARK: Gesture Recognizer Functions
     func setupGestureRecognizer() {
         let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         gestureRecognizer.minimumPressDuration = 0.5
@@ -66,6 +67,7 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         addPin(point: point)
     }
     
+    //MARK: Active Functions
     func addPin(point: MKPointAnnotation) {
         let pin = Pin(context: dataController.viewContext)
         pin.latitude = point.coordinate.latitude
@@ -80,6 +82,8 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         }
     }
     
+    
+    //MARK: Navigation Methods
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         print("segue prepared")
     
