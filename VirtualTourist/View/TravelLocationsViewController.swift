@@ -80,6 +80,19 @@ extension TravelLocationsViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         print("pin selected")
+        performSegue(withIdentifier: constants.showPhotoAlbum, sender: self)
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        print("segue prepared")
     }
 
+}
+
+
+extension TravelLocationsViewController {
+    enum constants {
+        static let showPhotoAlbum = "showPhotoAlbumView"
+    }
 }
