@@ -13,11 +13,13 @@ import CoreData
 class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDelegate {
     var viewController: UIViewController!
     var fetchedResultsController: NSFetchedResultsController<Pin>!
+    var needsFetch: Bool!
     
     init(viewController: UIViewController, fetchRequest: NSFetchRequest<Pin>?, managedObjectContext: NSManagedObjectContext?) {
         self.viewController = viewController
         
         if let fetchRequest = fetchRequest, let managedObjectContext = managedObjectContext {
+            needsFetch = true
             fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
             
             //TO DO: Do a better job of handling the fetch errors
@@ -26,8 +28,11 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
             } catch {
                 print(error.localizedDescription)
             }
+        } else {
+            needsFetch = false
         }
     }
+    
     func mapViewDidFailLoadingMap(_ mapView: MKMapView, withError error: Error) {
         let error = error as NSError
 
@@ -66,17 +71,19 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
     }
     
     func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
-        guard let fetchedPins = fetchedResultsController.fetchedObjects else {
-            print("no results controller")
-            return
+        if needsFetch {
+            guard let fetchedPins = fetchedResultsController.fetchedObjects else {
+                print("no results controller")
+                return
+            }
+            var annotations: [MKPointAnnotation] = []
+            
+            for pin in fetchedPins {
+                annotations.append(pin.getPoint())
+            }
+            
+            mapView.addAnnotations(annotations)
         }
-        var annotations: [MKPointAnnotation] = []
-        
-        for pin in fetchedPins {
-            annotations.append(pin.getPoint())
-        }
-        
-        mapView.addAnnotations(annotations)
     }
 }
 
