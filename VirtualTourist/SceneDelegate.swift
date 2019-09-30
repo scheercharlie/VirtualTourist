@@ -8,6 +8,8 @@
 
 import UIKit
 import SwiftUI
+import CoreData
+
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -21,7 +23,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Create the SwiftUI view that provides the window contents.
         let storyboard = UIStoryboard(name: "MapStoryboard", bundle: Bundle.main)
-        let initialVC = storyboard.instantiateInitialViewController()
+        let initialVC = storyboard.instantiateInitialViewController() as! UINavigationController
+        
+        let firstVC = initialVC.topViewController as! TravelLocationsViewController
+        let dataController = DataController(modelName: "VirtualTourist")
+
+
+        firstVC.dataController = dataController
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {

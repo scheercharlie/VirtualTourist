@@ -14,6 +14,8 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
     
     @IBOutlet weak var mapView: MKMapView!
     
+    var dataController: DataController!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
