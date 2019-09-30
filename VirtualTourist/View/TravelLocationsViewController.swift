@@ -53,6 +53,22 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         point.title = "title"
         
         mapView.addAnnotation(point)
+        
+        addPin(point: point)
+    }
+    
+    func addPin(point: MKPointAnnotation) {
+        let pin = Pin(context: dataController.viewContext)
+        pin.latitude = point.coordinate.latitude
+        pin.longitude = point.coordinate.longitude
+        
+        do {
+            try dataController.viewContext.save()
+            print("Save Success")
+        } catch {
+            print("could not save pin")
+            presentNoActionAlert(title:"Save Failed", message:"Could not save the pin location, try again")
+        }
     }
 
 }

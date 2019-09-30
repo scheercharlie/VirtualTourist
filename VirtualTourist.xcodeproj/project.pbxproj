@@ -19,6 +19,7 @@
 		BAECE843234073F7001989ED /* VirtualTourist.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BAECE841234073F7001989ED /* VirtualTourist.xcdatamodeld */; };
 		BAECE84523423176001989ED /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAECE84423423176001989ED /* PhotoAlbumViewController.swift */; };
 		BAECE847234234F4001989ED /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAECE846234234F4001989ED /* DataController.swift */; };
+		BAECE84B234253E2001989ED /* UIViewController+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAECE84A234253E2001989ED /* UIViewController+Helpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		BAECE842234073F7001989ED /* VirtualTourist.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VirtualTourist.xcdatamodel; sourceTree = "<group>"; };
 		BAECE84423423176001989ED /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 		BAECE846234234F4001989ED /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		BAECE84A234253E2001989ED /* UIViewController+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Helpers.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				BA4C516D2340583C0024188C /* ContentView.swift */,
 				BA4C51AD234061D40024188C /* TravelLocationsViewController.swift */,
 				BAECE84423423176001989ED /* PhotoAlbumViewController.swift */,
+				BAECE84A234253E2001989ED /* UIViewController+Helpers.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 				BAECE84523423176001989ED /* PhotoAlbumViewController.swift in Sources */,
 				BA4C516C2340583C0024188C /* SceneDelegate.swift in Sources */,
 				BAECE843234073F7001989ED /* VirtualTourist.xcdatamodeld in Sources */,
+				BAECE84B234253E2001989ED /* UIViewController+Helpers.swift in Sources */,
 				BA68511C234066D300F85F47 /* MapLocation.swift in Sources */,
 				BAECE847234234F4001989ED /* DataController.swift in Sources */,
 				BA4C516E2340583C0024188C /* ContentView.swift in Sources */,
