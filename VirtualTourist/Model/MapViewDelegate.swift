@@ -63,7 +63,20 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         print("pin selected")
         viewController.performSegue(withIdentifier: constants.showPhotoAlbum, sender: self)
+    }
+    
+    func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
+        guard let fetchedPins = fetchedResultsController.fetchedObjects else {
+            print("no results controller")
+            return
+        }
+        var annotations: [MKPointAnnotation] = []
         
+        for pin in fetchedPins {
+            annotations.append(pin.getPoint())
+        }
+        
+        mapView.addAnnotations(annotations)
     }
 }
 
