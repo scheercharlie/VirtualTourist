@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import MapKit
+import CoreData
 
 class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelegate {
     
@@ -21,7 +22,11 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        mapViewDelegate = MapViewDelegate(viewController: self)
+        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+        //This will likely fail, find out the default value for the unique identifier in nsmanagedobejct
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "objectID", ascending: true)]
+        
+        mapViewDelegate = MapViewDelegate(viewController: self, fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext)
         mapView.delegate = mapViewDelegate
         
         setupGestureRecognizer()
