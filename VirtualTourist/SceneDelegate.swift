@@ -24,6 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         //Create a DataController and pass it to the first ViewController
         let dataController = DataController(modelName: "VirtualTourist")
+        dataController.load()
         firstVC.dataController = dataController
 
         // Use a UIHostingController as window root view controller.

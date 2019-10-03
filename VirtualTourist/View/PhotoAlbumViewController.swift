@@ -15,10 +15,20 @@ class PhotoAlbumViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     
+    var mapPin: MapPin?
+    var dataController: DataController!
+    
     
     //MARK: View life cycle Methods
     override func viewDidLoad() {
         print("gallery view")
+        if let pin = mapPin {
+            if pin.pin != nil {
+                print("has saved pin")
+            }
+        }
+        
+        
     }
     
     

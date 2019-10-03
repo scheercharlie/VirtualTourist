@@ -46,35 +46,42 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
     //MARK: Gesture Recognizer Functions
     func setupGestureRecognizer() {
         let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-        gestureRecognizer.minimumPressDuration = 0.5
+        gestureRecognizer.minimumPressDuration = 1.0
         gestureRecognizer.delaysTouchesBegan = true
         gestureRecognizer.delegate = self
         
+        
+        
         self.mapView.addGestureRecognizer(gestureRecognizer)
     }
-        
+    
     @objc func handleLongPress(gestureRecognizer : UILongPressGestureRecognizer) {
-        print("that was a long press")
-        let location = gestureRecognizer.location(in: mapView)
-        let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
-        
-        let point = MKPointAnnotation()
-        point.coordinate = coordinate
-        
-        //Try to get a name for the a place given a location
-        //If successful set the point's title to the location name
-        let clLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        getLocationtitle(from: clLocation) { (name, error) in
-            if let locationName = name {
-                point.title = locationName
-            } else {
-                print(error?.localizedDescription ?? "Generic Error")
+        if gestureRecognizer.state == .began {
+            print("that was a long press")
+            let location = gestureRecognizer.location(in: mapView)
+            let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
+            let uuid = UUID()
+            
+            let point = MapPin()
+            point.coordinate = coordinate
+            point.subtitle = uuid.uuidString
+            
+            //Try to get a name for the a place given a location
+            //If successful set the point's title to the location name
+            let clLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            getLocationtitle(from: clLocation) { (name, error) in
+                if let locationName = name {
+                    point.title = locationName
+                } else {
+                    print(error?.localizedDescription ?? "Generic Error")
+                }
             }
+            
+            mapView.addAnnotation(point)
+            
+            let pin = addPin(point: point, name: point.title ?? "New Pin", uuid: uuid)
+            point.pin = pin
         }
-        
-        mapView.addAnnotation(point)
-        
-        addPin(point: point, name: point.title ?? "New Pin")
     }
     
     //Get the name of a location from a given CLLocation
@@ -83,25 +90,25 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         
         geoCoder.reverseGeocodeLocation(location) { (placemarks, error) in
             guard
-                let placemarks = placemarks, let location = placemarks.first?.name else {
+                let placemarks = placemarks, let locationString = placemarks.first?.name else {
                     DispatchQueue.main.async {
                         completion(nil, error)
                     }
                     return
             }
             DispatchQueue.main.async {
-                completion(location, nil)
+                completion(locationString, nil)
             }
         }
     }
     
     //MARK: Active Functions
-    func addPin(point: MKPointAnnotation, name: String) {
+    func addPin(point: MKPointAnnotation, name: String, uuid: UUID) -> Pin {
         let pin = Pin(context: dataController.viewContext)
         pin.latitude = point.coordinate.latitude
         pin.longitude = point.coordinate.longitude
         pin.name = name
-        
+        pin.uuid = uuid.uuidString
         
         do {
             try dataController.viewContext.save()
@@ -110,13 +117,17 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
             print("could not save pin")
             presentNoActionAlert(title:"Save Failed", message:"Could not save the pin location, try again")
         }
+        
+        return pin
     }
     
     
     //MARK: Navigation Methods
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         print("segue prepared")
-    
+        let destination = segue.destination as! PhotoAlbumViewController
+        destination.mapPin = mapView.selectedAnnotations[0] as? MapPin
+        destination.dataController = dataController
     }
 
 }

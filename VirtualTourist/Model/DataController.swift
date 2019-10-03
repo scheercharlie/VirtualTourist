@@ -8,7 +8,7 @@
 
 import Foundation
 import CoreData
-import UIKit
+import MapKit
 
 class DataController {
     let persistentContainer: NSPersistentContainer!
@@ -23,9 +23,23 @@ class DataController {
     func load(completion: (() -> Void)? = nil) {
         persistentContainer.loadPersistentStores { (storeDescription, error) in
             guard error == nil else {
+                //TO DO: handle the error better
                 fatalError("Could not load persistent store")
             }
             completion?()
         }
+    }
+    
+    func getPinFromUUID(uuidString: String) -> Pin {
+        let predicate = NSPredicate(format: "uuid = %@", uuidString)
+        let fetchRequest = NSFetchRequest<Pin>()
+        fetchRequest.predicate = predicate
+        
+        let results = try? fetchRequest.execute()
+        
+        print(results?.count)
+        print(results)
+        
+        return Pin()
     }
 }

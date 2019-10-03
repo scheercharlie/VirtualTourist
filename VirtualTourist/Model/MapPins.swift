@@ -7,3 +7,10 @@
 //
 
 import Foundation
+import UIKit
+import MapKit
+
+class MapPin: MKPointAnnotation {
+    var pin: Pin!
+    
+}
