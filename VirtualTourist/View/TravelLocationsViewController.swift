@@ -78,6 +78,7 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
             }
             
             mapView.addAnnotation(point)
+            print(point)
             
             let pin = addPin(point: point, name: point.title ?? "New Pin", uuid: uuid)
             point.pin = pin

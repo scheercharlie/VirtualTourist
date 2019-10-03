@@ -24,4 +24,13 @@ extension Pin {
         
         return point
     }
+    
+    func returnMapPin() -> MapPin {
+        let mapPin = MapPin()
+        mapPin.pin = self
+        mapPin.coordinate = self.getCoordinate()
+        
+        return mapPin
+    }
+    
 }

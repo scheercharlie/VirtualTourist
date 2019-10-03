@@ -27,6 +27,12 @@ struct MapLocation: Codable {
         print(longitude, latitude, longitudeDelta, latitudeDelta)
     }
     
+    init(fromMapView mapView: MKMapView) {
+        self.longitude = mapView.centerCoordinate.longitude
+        self.latitude = mapView.centerCoordinate.latitude
+        self.longitudeDelta = mapView.region.span.longitudeDelta
+        self.latitudeDelta = mapView.region.span.latitudeDelta
+    }
     
     //MARK: Calculate and Return functions:
     

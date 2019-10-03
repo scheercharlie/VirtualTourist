@@ -84,10 +84,10 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
                 print("no results controller")
                 return
             }
-            var annotations: [MKPointAnnotation] = []
+            var annotations: [MapPin] = []
             
             for pin in fetchedPins {
-                annotations.append(pin.getPoint())
+                annotations.append(pin.returnMapPin())
             }
             
             mapView.addAnnotations(annotations)
