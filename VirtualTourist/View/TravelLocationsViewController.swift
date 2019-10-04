@@ -70,7 +70,7 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
                 }
             }
             point.coordinate = coordinate
-            point.pin = Pin(fromCoordinate: coordinate, name: point.title ?? "New Pin")
+            point.pin = Pin(fromCoordinate: coordinate, name: point.title ?? point.returnCoordinateAsName())
             
             savePinToStorage(point.pin)
             
@@ -84,7 +84,7 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         
         geoCoder.reverseGeocodeLocation(location) { (placemarks, error) in
             guard
-                let placemarks = placemarks, let locationString = placemarks.first?.name else {
+                let placemarks = placemarks, let locationString = placemarks.first?.locality else {
                     DispatchQueue.main.async {
                         completion(nil, error)
                     }

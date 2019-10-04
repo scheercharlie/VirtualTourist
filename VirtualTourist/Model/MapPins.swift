@@ -13,4 +13,10 @@ import MapKit
 class MapPin: MKPointAnnotation {
     var pin: Pin!
     
+    func returnCoordinateAsName() -> String {
+        let roundedLatitudeString = String(self.coordinate.latitude.rounded())
+        let roundedLongitudeString = String(self.coordinate.longitude.rounded())
+        let string = roundedLatitudeString + " + " + roundedLongitudeString
+        return string
+    }
 }
