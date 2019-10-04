@@ -42,6 +42,14 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        //Functions for when the travel locations view disappears
+        //Save new location to UserDefaults
+        let currentMapLocation = MapLocation.init(coordinate: mapView.centerCoordinate, span: mapView.region.span)
+        currentMapLocation.saveMapViewLocationToUserDefaults()
+        print("saved mapview location")
+    }
+    
     //MARK: Gesture Recognizer Functions
     func setupGestureRecognizer() {
         let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))

@@ -45,13 +45,6 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
         }
     }
     
-    //Functions for when the map view changes
-    //Save new location to UserDefaults
-    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        let currentMapLocation = MapLocation.init(coordinate: mapView.centerCoordinate, span: mapView.region.span)
-        currentMapLocation.saveMapViewLocationToUserDefaults()
-    }
-    
     //Setup the appearance of pins for the map view
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuse = "pin"
@@ -93,8 +86,6 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
             mapView.addAnnotations(annotations)
         }
         
-        mapView.region.span.latitudeDelta = 1.0
-        mapView.region.span.longitudeDelta = 1.0
     }
 }
 
