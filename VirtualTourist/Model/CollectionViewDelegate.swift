@@ -12,6 +12,7 @@ import CoreData
 
 class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     var flowLayout: UICollectionViewFlowLayout!
+    private let spacing: CGFloat = 16.0
     
     init(flowLayout: UICollectionViewFlowLayout) {
         self.flowLayout = flowLayout
@@ -33,15 +34,28 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             return UICollectionViewCell()
         }
         
-        let imageview:UIImageView=UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        let imageview:UIImageView=UIImageView(frame: cell.bounds)
         imageview.image = UIImage(named: "VirtualTourist_120")
         
         cell.contentView.addSubview(imageview)
         return cell
     }
     
+    /*CollectionViewCell Spacing code found at https://medium.com/@NickBabo/equally-spaced-uicollectionview-cells-6e60ce8d457b
+     Author:Nicholas Babo
+     Article: Equally Spaced UICollectionView Cells
+     Site: Medium*/
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 50, height: 50)
+        let numberOfItemsPerRow: CGFloat = 3
+        let spacingBetweenItems: CGFloat = 16
+        
+        let totalSpacing = (2 * self.spacing) + ((numberOfItemsPerRow - 1) * spacingBetweenItems)
+        
+        
+        let width = (collectionView.bounds.width - totalSpacing) / numberOfItemsPerRow
+        return CGSize(width: width, height: width)
+        
+        
     }
     
 }
