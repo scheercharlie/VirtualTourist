@@ -11,6 +11,15 @@ import CoreData
 import MapKit
 
 extension Pin {
+    
+    convenience init(fromCoordinate coordinate: CLLocationCoordinate2D, name: String) {
+        self.init()
+        
+        self.latitude = coordinate.latitude
+        self.longitude = coordinate.longitude
+        self.name = name
+    }
+    
     //May not be required.  Remove if possible
     func getCoordinate() -> CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)

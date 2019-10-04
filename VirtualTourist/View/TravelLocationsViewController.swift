@@ -23,7 +23,6 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         super.viewDidLoad()
         
         let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
-        //This will likely fail, find out the default value for the unique identifier in nsmanagedobejct
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "objectID", ascending: true)]
         
         mapViewDelegate = MapViewDelegate(viewController: self, fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext)
@@ -50,8 +49,6 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         gestureRecognizer.delaysTouchesBegan = true
         gestureRecognizer.delegate = self
         
-        
-        
         self.mapView.addGestureRecognizer(gestureRecognizer)
     }
     
@@ -60,28 +57,24 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
             print("that was a long press")
             let location = gestureRecognizer.location(in: mapView)
             let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
-            let uuid = UUID()
             
             let point = MapPin()
-            point.coordinate = coordinate
-            point.subtitle = uuid.uuidString
             
             //Try to get a name for the a place given a location
             //If successful set the point's title to the location name
-            let clLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-            getLocationtitle(from: clLocation) { (name, error) in
+            getLocationtitle(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)) { (name, error) in
                 if let locationName = name {
                     point.title = locationName
                 } else {
                     print(error?.localizedDescription ?? "Generic Error")
                 }
             }
+            point.coordinate = coordinate
+            point.pin = Pin(fromCoordinate: coordinate, name: point.title ?? "New Pin")
+            
+            savePinToStorage(point.pin)
             
             mapView.addAnnotation(point)
-            print(point)
-            
-            let pin = addPin(point: point, name: point.title ?? "New Pin", uuid: uuid)
-            point.pin = pin
         }
     }
     
@@ -104,12 +97,11 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
     }
     
     //MARK: Active Functions
-    func addPin(point: MKPointAnnotation, name: String, uuid: UUID) -> Pin {
-        let pin = Pin(context: dataController.viewContext)
-        pin.latitude = point.coordinate.latitude
-        pin.longitude = point.coordinate.longitude
-        pin.name = name
-        pin.uuid = uuid.uuidString
+    func savePinToStorage(_ pin : Pin) {
+        let newPin = Pin(context: dataController.viewContext)
+        newPin.latitude = pin.latitude
+        newPin.longitude = pin.longitude
+        newPin.name = pin.name
         
         do {
             try dataController.viewContext.save()
@@ -118,8 +110,6 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
             print("could not save pin")
             presentNoActionAlert(title:"Save Failed", message:"Could not save the pin location, try again")
         }
-        
-        return pin
     }
     
     

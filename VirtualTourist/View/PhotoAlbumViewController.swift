@@ -33,15 +33,11 @@ class PhotoAlbumViewController: UIViewController {
         if let pin = mapPin {
             
             mapView.centerCoordinate.longitude = pin.pin.longitude
-            print(pin.pin.longitude)
-            print(mapView.centerCoordinate.longitude)
             mapView.centerCoordinate.latitude = pin.pin.latitude
             mapView.addAnnotation(pin)
         }
         
-        mapView.region.span.latitudeDelta = 10.2
-        print(mapView.region.span.longitudeDelta)
-        mapView.region.span.longitudeDelta = 4.13
+
     }
     
     //TO DO: Make map un selectable/un zoomable/etc
