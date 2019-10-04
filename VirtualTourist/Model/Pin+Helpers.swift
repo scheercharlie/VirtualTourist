@@ -12,8 +12,8 @@ import MapKit
 
 extension Pin {
     
-    convenience init(fromCoordinate coordinate: CLLocationCoordinate2D, name: String) {
-        self.init()
+    convenience init(fromCoordinate coordinate: CLLocationCoordinate2D, name: String, managedObjectContext: NSManagedObjectContext) {
+        self.init(context: managedObjectContext)
         
         self.latitude = coordinate.latitude
         self.longitude = coordinate.longitude

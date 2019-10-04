@@ -70,7 +70,7 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
                 }
             }
             point.coordinate = coordinate
-            point.pin = Pin(fromCoordinate: coordinate, name: point.title ?? point.returnCoordinateAsName())
+            point.pin = Pin(fromCoordinate: coordinate, name: point.title ?? point.returnCoordinateAsName(), managedObjectContext: dataController.viewContext)
             
             savePinToStorage(point.pin)
             
@@ -98,11 +98,11 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
     
     //MARK: Active Functions
     func savePinToStorage(_ pin : Pin) {
-        let newPin = Pin(context: dataController.viewContext)
-        newPin.latitude = pin.latitude
-        newPin.longitude = pin.longitude
-        newPin.name = pin.name
-        
+//        let newPin = Pin(context: dataController.viewContext)
+//        newPin.latitude = pin.latitude
+//        newPin.longitude = pin.longitude
+//        newPin.name = pin.name
+//
         do {
             try dataController.viewContext.save()
             print("Save Successful")
