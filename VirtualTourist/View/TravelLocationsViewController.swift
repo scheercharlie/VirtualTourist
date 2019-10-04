@@ -62,25 +62,10 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
     
     @objc func handleLongPress(gestureRecognizer : UILongPressGestureRecognizer) {
         if gestureRecognizer.state == .began {
-            print("that was a long press")
             let location = gestureRecognizer.location(in: mapView)
             let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
             
-            let point = MapPin()
-            
-            //Try to get a name for the a place given a location
-            //If successful set the point's title to the location name
-            getLocationtitle(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)) { (name, error) in
-                if let locationName = name {
-                    point.title = locationName
-                } else {
-                    print(error?.localizedDescription ?? "Generic Error")
-                }
-            }
-            point.coordinate = coordinate
-            point.pin = Pin(fromCoordinate: coordinate, name: point.title ?? point.returnCoordinateAsName(), managedObjectContext: dataController.viewContext)
-            
-            savePinToStorage(point.pin)
+            let point = createNewVirtualTouristMapAnnotation(coordinate: coordinate)
             
             mapView.addAnnotation(point)
         }
@@ -104,6 +89,28 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         }
     }
     
+    //Create a new VirtualTouristMKPointAnnotation from coordinate
+    //Save new Pin to viewContext
+    //Return new VirtualTouristMapAnnotation
+    func createNewVirtualTouristMapAnnotation(coordinate: CLLocationCoordinate2D) -> VirtualTouristMapAnnotation {
+        let mapAnnotation = VirtualTouristMapAnnotation()
+        //Try to get a name for the a place given a location
+        //If successful set the point's title to the location name
+        getLocationtitle(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)) { (name, error) in
+            if let locationName = name {
+                mapAnnotation.title = locationName
+            } else {
+                print(error?.localizedDescription ?? "Generic Error")
+            }
+        }
+        mapAnnotation.coordinate = coordinate
+        mapAnnotation.pin = Pin(fromCoordinate: coordinate, name: mapAnnotation.title ?? mapAnnotation.returnCoordinateAsName(), managedObjectContext: dataController.viewContext)
+        
+        savePinToStorage(mapAnnotation.pin)
+        
+        return mapAnnotation
+    }
+    
     //MARK: Active Functions
     func savePinToStorage(_ pin : Pin) {
         do {
@@ -120,7 +127,7 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         print("segue prepared")
         let destination = segue.destination as! PhotoAlbumViewController
-        destination.mapPin = mapView.selectedAnnotations[0] as? MapPin
+        destination.mapAnnotation = mapView.selectedAnnotations[0] as? VirtualTouristMapAnnotation
         destination.dataController = dataController
     }
 

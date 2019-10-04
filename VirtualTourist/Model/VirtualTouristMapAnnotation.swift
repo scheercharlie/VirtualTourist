@@ -1,5 +1,5 @@
 //
-//  MapPins.swift
+//  VirtualTouristMapAnnotation.swift
 //  VirtualTourist
 //
 //  Created by Charlie Scheer on 10/2/19.
@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import MapKit
 
-class MapPin: MKPointAnnotation {
+class VirtualTouristMapAnnotation: MKPointAnnotation {
     var pin: Pin!
     
     func returnCoordinateAsName() -> String {

@@ -25,13 +25,13 @@ extension Pin {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
-    func returnMapPin() -> MapPin {
-        let mapPin = MapPin()
-        mapPin.pin = self
-        mapPin.coordinate = self.getCoordinate()
-        mapPin.title = self.name
+    func returnMapAnnotation() -> VirtualTouristMapAnnotation {
+        let mapAnnotation = VirtualTouristMapAnnotation()
+        mapAnnotation.pin = self
+        mapAnnotation.coordinate = self.getCoordinate()
+        mapAnnotation.title = self.name
         
-        return mapPin
+        return mapAnnotation
     }
     
 }

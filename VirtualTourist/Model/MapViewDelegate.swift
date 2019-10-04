@@ -77,10 +77,10 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
                 print("no results controller")
                 return
             }
-            var annotations: [MapPin] = []
+            var annotations: [VirtualTouristMapAnnotation] = []
             
             for pin in fetchedPins {
-                annotations.append(pin.returnMapPin())
+                annotations.append(pin.returnMapAnnotation()())
             }
             
             mapView.addAnnotations(annotations)

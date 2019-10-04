@@ -15,7 +15,7 @@ class PhotoAlbumViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var mapPin: MapPin?
+    var mapAnnotation: VirtualTouristMapAnnotation?
     var mapViewDelegate: MapViewDelegate!
     var dataController: DataController!
     
@@ -37,7 +37,7 @@ class PhotoAlbumViewController: UIViewController {
     fileprivate func setupMapView() {
         mapViewDelegate = MapViewDelegate(viewController: self, fetchRequest: nil, managedObjectContext: nil)
         mapView.delegate = mapViewDelegate
-        if let pin = mapPin {
+        if let pin = mapAnnotation {
             let span = MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
             let region = MKCoordinateRegion(center: pin.pin.getCoordinate(), span: span)
             mapView.setRegion(region, animated: false)
