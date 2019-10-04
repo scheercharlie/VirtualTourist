@@ -92,6 +92,9 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
             
             mapView.addAnnotations(annotations)
         }
+        
+        mapView.region.span.latitudeDelta = 1.0
+        mapView.region.span.longitudeDelta = 1.0
     }
 }
 

@@ -24,20 +24,28 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        mapViewDelegate = MapViewDelegate(viewController: self, fetchRequest: nil, managedObjectContext: nil)
-        mapView.delegate = mapViewDelegate
+        setupMapView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if let pin = mapPin {
-            
-            mapView.centerCoordinate.longitude = pin.pin.longitude
-            mapView.centerCoordinate.latitude = pin.pin.latitude
-            mapView.addAnnotation(pin)
-        }
+        
         
 
+    }
+    
+    fileprivate func setupMapView() {
+        mapViewDelegate = MapViewDelegate(viewController: self, fetchRequest: nil, managedObjectContext: nil)
+        mapView.delegate = mapViewDelegate
+        if let pin = mapPin {
+            let span = MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
+            let region = MKCoordinateRegion(center: pin.pin.getCoordinate(), span: span)
+            mapView.setRegion(region, animated: false)
+            mapView.addAnnotation(pin)
+            
+            mapView.isUserInteractionEnabled = false
+            
+        }
     }
     
     //TO DO: Make map un selectable/un zoomable/etc
