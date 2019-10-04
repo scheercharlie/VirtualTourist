@@ -33,12 +33,15 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             return UICollectionViewCell()
         }
         
-        return cell
+        let imageview:UIImageView=UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        imageview.image = UIImage(named: "VirtualTourist_120")
         
+        cell.contentView.addSubview(imageview)
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 100, height: 100)
+        return CGSize(width: 50, height: 50)
     }
     
 }
