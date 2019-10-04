@@ -29,9 +29,9 @@ class PhotoAlbumViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        
-
+        if let mapAnnotation = mapAnnotation {
+            self.title = mapAnnotation.pin.name
+        }
     }
     
     fileprivate func setupMapView() {

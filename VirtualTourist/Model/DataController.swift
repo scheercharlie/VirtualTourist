@@ -29,17 +29,4 @@ class DataController {
             completion?()
         }
     }
-    
-    func getPinFromUUID(uuidString: String) -> Pin {
-        let predicate = NSPredicate(format: "uuid = %@", uuidString)
-        let fetchRequest = NSFetchRequest<Pin>()
-        fetchRequest.predicate = predicate
-        
-        let results = try? fetchRequest.execute()
-        
-        print(results?.count)
-        print(results)
-        
-        return Pin()
-    }
 }

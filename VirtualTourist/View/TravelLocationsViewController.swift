@@ -30,7 +30,7 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         
         setupGestureRecognizer()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
@@ -65,9 +65,12 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
             let location = gestureRecognizer.location(in: mapView)
             let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
             
-            let point = createNewVirtualTouristMapAnnotation(coordinate: coordinate)
-            
+            let point = VirtualTouristMapAnnotation()
+            point.coordinate = coordinate
             mapView.addAnnotation(point)
+            
+            createPinFromMapAnnotation(mapAnnotation: point, coordinate: coordinate)
+            
         }
     }
     
@@ -78,37 +81,36 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         geoCoder.reverseGeocodeLocation(location) { (placemarks, error) in
             guard
                 let placemarks = placemarks, let locationString = placemarks.first?.locality else {
-                    DispatchQueue.main.async {
-                        completion(nil, error)
-                    }
+                    
+                    completion(nil, error)
+                    
                     return
             }
-            DispatchQueue.main.async {
-                completion(locationString, nil)
-            }
+            
+            completion(locationString, nil)
+            
         }
     }
     
     //Create a new VirtualTouristMKPointAnnotation from coordinate
     //Save new Pin to viewContext
     //Return new VirtualTouristMapAnnotation
-    func createNewVirtualTouristMapAnnotation(coordinate: CLLocationCoordinate2D) -> VirtualTouristMapAnnotation {
-        let mapAnnotation = VirtualTouristMapAnnotation()
+    func createPinFromMapAnnotation(mapAnnotation: VirtualTouristMapAnnotation, coordinate: CLLocationCoordinate2D) {
         //Try to get a name for the a place given a location
         //If successful set the point's title to the location name
         getLocationtitle(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)) { (name, error) in
             if let locationName = name {
                 mapAnnotation.title = locationName
+                
+                mapAnnotation.pin = Pin(fromCoordinate: coordinate,
+                                        name: mapAnnotation.title ?? mapAnnotation.returnCoordinateAsName(),
+                                        managedObjectContext: self.dataController.viewContext)
+                
+                self.savePinToStorage(mapAnnotation.pin)
             } else {
                 print(error?.localizedDescription ?? "Generic Error")
             }
         }
-        mapAnnotation.coordinate = coordinate
-        mapAnnotation.pin = Pin(fromCoordinate: coordinate, name: mapAnnotation.title ?? mapAnnotation.returnCoordinateAsName(), managedObjectContext: dataController.viewContext)
-        
-        savePinToStorage(mapAnnotation.pin)
-        
-        return mapAnnotation
     }
     
     //MARK: Active Functions
@@ -130,5 +132,5 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         destination.mapAnnotation = mapView.selectedAnnotations[0] as? VirtualTouristMapAnnotation
         destination.dataController = dataController
     }
-
+    
 }
