@@ -14,6 +14,7 @@ class PhotoAlbumViewController: UIViewController {
     //MARK: View Properties
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
     var mapAnnotation: VirtualTouristMapAnnotation?
     var mapViewDelegate: MapViewDelegate!
@@ -23,6 +24,10 @@ class PhotoAlbumViewController: UIViewController {
     //MARK: View life cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        flowLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        flowLayout.minimumInteritemSpacing = 10
+        flowLayout.minimumLineSpacing = 10
+        flowLayout.itemSize = CGSize(width: 50, height: 50)
         
         setupMapView()
     }
@@ -32,6 +37,8 @@ class PhotoAlbumViewController: UIViewController {
         if let mapAnnotation = mapAnnotation {
             self.title = mapAnnotation.pin.name
         }
+        
+        
     }
     
     fileprivate func setupMapView() {
@@ -47,7 +54,25 @@ class PhotoAlbumViewController: UIViewController {
             
         }
     }
+}
+
+extension PhotoAlbumViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 5
+    }
     
-    //TO DO: Make map un selectable/un zoomable/etc
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as? CollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        
+        return cell
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 100, height: 100)
+    }
+    
 }
 
