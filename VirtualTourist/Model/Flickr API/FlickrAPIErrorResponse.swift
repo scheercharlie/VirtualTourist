@@ -8,7 +8,7 @@
 
 import Foundation
 
-class FlickrAPIErrorResponse: Codable {
+struct FlickrAPIErrorResponse: Codable {
     let stat: String
     let code: Int
     let error: String
