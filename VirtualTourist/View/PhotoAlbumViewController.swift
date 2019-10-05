@@ -31,8 +31,6 @@ class PhotoAlbumViewController: UIViewController {
         collectionView.dataSource = collectionViewDelegate
         
         setupMapView()
-        
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {

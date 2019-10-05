@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BA1F7B3723459C1600ACCD41 /* VirtualTouristMapAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1F7B3623459C1600ACCD41 /* VirtualTouristMapAnnotation.swift */; };
+		BA3BC33C2347E802008C6320 /* FlickrAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3BC33B2347E802008C6320 /* FlickrAPIClient.swift */; };
 		BA4C516A2340583C0024188C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4C51692340583C0024188C /* AppDelegate.swift */; };
 		BA4C516C2340583C0024188C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4C516B2340583C0024188C /* SceneDelegate.swift */; };
 		BA4C516E2340583C0024188C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4C516D2340583C0024188C /* ContentView.swift */; };
@@ -29,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		BA1F7B3623459C1600ACCD41 /* VirtualTouristMapAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTouristMapAnnotation.swift; sourceTree = "<group>"; };
+		BA3BC33B2347E802008C6320 /* FlickrAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrAPIClient.swift; sourceTree = "<group>"; };
 		BA4C51662340583C0024188C /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA4C51692340583C0024188C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BA4C516B2340583C0024188C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				BA1F7B3623459C1600ACCD41 /* VirtualTouristMapAnnotation.swift */,
 				BA8AC2F3234711D80089EC49 /* CollectionViewCell.swift */,
 				BA8AC2F5234713450089EC49 /* CollectionViewDelegate.swift */,
+				BA3BC33B2347E802008C6320 /* FlickrAPIClient.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -209,6 +212,7 @@
 			files = (
 				BA1F7B3723459C1600ACCD41 /* VirtualTouristMapAnnotation.swift in Sources */,
 				BA4C516A2340583C0024188C /* AppDelegate.swift in Sources */,
+				BA3BC33C2347E802008C6320 /* FlickrAPIClient.swift in Sources */,
 				BAECE84523423176001989ED /* PhotoAlbumViewController.swift in Sources */,
 				BA4C516C2340583C0024188C /* SceneDelegate.swift in Sources */,
 				BAECE843234073F7001989ED /* VirtualTourist.xcdatamodeld in Sources */,
