@@ -9,7 +9,7 @@
 import Foundation
 
 
-struct FlickrAPIPhotosResonse: Codable {
+struct FlickrAPIPhotosSearchResonse: Codable {
     let page: Int
     let pages: Int
     let perpage: Int

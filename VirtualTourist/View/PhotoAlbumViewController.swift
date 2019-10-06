@@ -37,7 +37,12 @@ class PhotoAlbumViewController: UIViewController {
         super.viewDidAppear(animated)
         if let mapAnnotation = mapAnnotation {
             self.title = mapAnnotation.pin.name
+            
+            FlickrAPIClient.preformImageLocationSearch(from: mapAnnotation) { (photoSearchResponse, error) in
+                print(photoSearchResponse?.photo)
+            }
         }
+        
         
         
     }

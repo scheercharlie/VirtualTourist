@@ -32,6 +32,7 @@ class FlickrAPIClient {
     }
     
     private class func taskForGetRequest<ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, completion: @escaping (ResponseType?, Error?) -> Void) {
+        print(url)
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
@@ -41,7 +42,11 @@ class FlickrAPIClient {
             }
             
             
+            let json = try? JSONSerialization.jsonObject(with: data, options: [])
+            print(json)
+            
             let decoder = JSONDecoder()
+            
             
             do {
                 let response = try decoder.decode(ResponseType.self, from: data)
@@ -68,7 +73,28 @@ class FlickrAPIClient {
         }
         task.resume()
     }
-    
+
+    //TO DO: add an error for the api returning no images
+    static func preformImageLocationSearch(from mapAnnotation: VirtualTouristMapAnnotation, completion: @escaping (FlickrAPIPhotosSearchResonse?, Error?) -> Void) {
+        let latitude = mapAnnotation.pin.latitude
+        let longitude = mapAnnotation.pin.longitude
+        
+        let url = FlickrAPIClient.endPoints.getPhotos(latitude, longitude).url
+        
+        taskForGetRequest(url: url, responseType: FlickrAPIPhotosSearchResonse.self) { (response, error) in
+            if error == nil {
+                DispatchQueue.main.async {
+                    completion(response, nil)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
+            }
+        }
+    }
 }
+
+
 
 
