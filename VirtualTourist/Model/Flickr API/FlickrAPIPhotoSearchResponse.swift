@@ -10,22 +10,40 @@ import Foundation
 
 
 struct FlickrAPIPhotosSearchResonse: Codable {
-    let page: Int
-    let pages: Int
-    let perpage: Int
-    let total: Int
-    let photo: [JSONPhoto]
+    let photos: PhotoResponse
     let stat: String
 }
 
+struct PhotoResponse: Codable{
+    let page: Int
+    let pages: Int
+    let perpage: Int
+    let total: String
+    let photo: [JSONPhoto]
+}
+
 struct JSONPhoto: Codable {
-    let id: Int
+    let id: String
     let owner: String
     let secret: String
-    let server: Int
+    let server: String
     let farm: Int
     let title: String
     let ispublic: Int
     let isfriend: Int
     let isfamily: Int
+    let url: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case owner
+        case secret
+        case server
+        case farm
+        case title
+        case ispublic
+        case isfriend
+        case isfamily
+        case url = "url_o"
+    }
 }

@@ -21,7 +21,7 @@ class FlickrAPIClient {
         
         var stringValue: String {
             switch self {
-            case .getPhotos(let lat, let lon): return endPoints.baseURL + endPoints.api_key_param + "&accuracy=11" + "&lat=" + String(lat) + "&lon=" + String(lon) + "&format=json&nojsoncallback=1"
+            case .getPhotos(let lat, let lon): return endPoints.baseURL + endPoints.api_key_param + "&accuracy=11" + "&lat=" + String(lat) + "&lon=" + String(lon) + "&per_page=5" + "&extras=url_o" + "&format=json&nojsoncallback=1"
                 
             }
         }
@@ -31,40 +31,40 @@ class FlickrAPIClient {
         }
     }
     
-    private class func taskForGetRequest<ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, completion: @escaping (ResponseType?, Error?) -> Void) {
-        print(url)
+    private class func taskForGetRequest<ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, completion: @escaping (Bool, ResponseType?, Error?) -> Void) {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        
+        print(url)
         
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             guard error == nil, let data = data else {
                 return
             }
             
-            
             let json = try? JSONSerialization.jsonObject(with: data, options: [])
             print(json)
             
             let decoder = JSONDecoder()
             
-            
             do {
                 let response = try decoder.decode(ResponseType.self, from: data)
-                
+    
                 DispatchQueue.main.async {
-                    completion(response, nil)
+                    completion(true, response, nil)
                 }
             } catch {
+                print(error)
                 do {
                     //Decode Error if decoding fails
                     let errorResponse = try decoder.decode(FlickrAPIErrorResponse.self, from: data)
                     
                     DispatchQueue.main.async {
-                        completion(nil, errorResponse)
+                        completion(false, nil, errorResponse)
                     }
                 } catch {
                     DispatchQueue.main.async {
-                        completion(nil, error)
+                        completion(false, nil, error)
                     }
                 }
                 
@@ -81,7 +81,7 @@ class FlickrAPIClient {
         
         let url = FlickrAPIClient.endPoints.getPhotos(latitude, longitude).url
         
-        taskForGetRequest(url: url, responseType: FlickrAPIPhotosSearchResonse.self) { (response, error) in
+        taskForGetRequest(url: url, responseType: FlickrAPIPhotosSearchResonse.self) { (success, response, error) in
             if error == nil {
                 DispatchQueue.main.async {
                     completion(response, nil)
