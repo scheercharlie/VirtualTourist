@@ -44,8 +44,11 @@ class PhotoAlbumViewController: UIViewController {
                     for photo in photoRepsonse.photos.photo{
                         print(photo.url)
                     }
+                } else {
+                    if let error = error {
+                        self.presentNoActionAlert(title: "Error", message: error.localizedDescription)
+                    }
                 }
-                print(error)
             }
         }
         

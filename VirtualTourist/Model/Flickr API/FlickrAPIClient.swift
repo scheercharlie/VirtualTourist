@@ -42,9 +42,6 @@ class FlickrAPIClient {
                 return
             }
             
-            let json = try? JSONSerialization.jsonObject(with: data, options: [])
-            print(json)
-            
             let decoder = JSONDecoder()
             
             do {
@@ -54,11 +51,10 @@ class FlickrAPIClient {
                     completion(true, response, nil)
                 }
             } catch {
-                print(error)
+                
                 do {
                     //Decode Error if decoding fails
                     let errorResponse = try decoder.decode(FlickrAPIErrorResponse.self, from: data)
-                    
                     DispatchQueue.main.async {
                         completion(false, nil, errorResponse)
                     }
