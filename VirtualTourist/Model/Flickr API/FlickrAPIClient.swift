@@ -133,25 +133,19 @@ class FlickrAPIClient {
         return downloadedData
     }
     
-    static func getImageFromSavedImageData(resultsController: NSFetchedResultsController<Photo>) -> UIImage? {
+    static func getImageFromSavedImageData(photoObject: Photo) -> UIImage? {
         var image = UIImage()
         
-        guard let results = resultsController.fetchedObjects else {
-            print("No objects found")
+        guard let data = photoObject.photoData else {
+            print("No photo data found")
             return nil
         }
-        
-        for photoObject in results {
-            guard let data = photoObject.photoData else {
-                print("No photo data found")
-                return nil
-            }
-            if let photo = UIImage(data: data) {
-                image = photo
-            } else {
-                print("Could not convert image")
-            }
+        if let photo = UIImage(data: data) {
+            image = photo
+        } else {
+            print("Could not convert image")
         }
+        
         
         return image
     }

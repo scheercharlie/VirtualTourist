@@ -36,25 +36,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         }
     }
     
-//    func getArray() {
-//        FlickrAPIClient.preformImageLocationSearch(from: mapAnnotation) { (photoSearchResponse, error) in
-//            if let photoRepsonse = photoSearchResponse {
-//
-//                for photo in photoRepsonse.photos.photo{
-//                    if let url = URL(string: photo.url) {
-//                        let image = FlickrAPIClient.getImageFrom(url: url)
-//                        self.urlArray.append(photo.url)
-//                        self.array.append(image)
-//                        print(self.array.count)
-//                        print(self.urlArray.count)
-//                    } else {
-//                        print("not valid url")
-//                    }
-//                }
-//            }
-//        }
-//    }
-    
     func setupFlowLayoutPreferences() {
         flowLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         flowLayout.minimumInteritemSpacing = 10
@@ -63,20 +44,21 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return fetchResultsController.fetchedObjects?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath)
         
-        
-        
-        let imageView: UIImageView = UIImageView(frame: cell.bounds)
-        imageView.image = UIImage(named: "VirtualTourist_120")
-
-        
-        cell.contentView.addSubview(imageView)
-        
+        if let image = FlickrAPIClient.getImageFromSavedImageData(photoObject: fetchResultsController.object(at: indexPath)) {
+            let imageView: UIImageView = UIImageView(frame: cell.bounds)
+            imageView.image = image
+            cell.contentView.addSubview(imageView)
+        } else {
+            let imageView: UIImageView = UIImageView(frame: cell.bounds)
+            imageView.image = UIImage(named: "VirtualTourist_120")
+            cell.contentView.addSubview(imageView)
+        }
         return cell
     }
     
