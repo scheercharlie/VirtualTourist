@@ -19,10 +19,18 @@ struct PhotoResponse: Codable{
     let pages: Int
     let perpage: Int
     let total: String
-    let photo: [JSONPhoto]
+    let photoProperties: [JSONPhotoProperty]
+    
+    enum CodingKeys: String, CodingKey {
+        case page
+        case pages
+        case perpage
+        case total
+        case photoProperties = "photo"
+    }
 }
 
-struct JSONPhoto: Codable {
+struct JSONPhotoProperty: Codable {
     let id: String
     let owner: String
     let secret: String

@@ -20,15 +20,18 @@ class PhotoAlbumViewController: UIViewController {
     var mapViewDelegate: MapViewDelegate!
     var dataController: DataController!
     var collectionViewDelegate: CollectionViewDelegate!
+    var tempImageArray: [UIImage] = []
     
     
     //MARK: View life cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionViewDelegate = CollectionViewDelegate(flowLayout: flowLayout)
+        collectionViewDelegate = CollectionViewDelegate(flowLayout: flowLayout, mapAnnotation: mapAnnotation!, vc: self)
+        collectionViewDelegate.mapAnnotation = mapAnnotation
         
         collectionView.delegate = collectionViewDelegate
         collectionView.dataSource = collectionViewDelegate
+        
         
         setupMapView()
     }
@@ -38,18 +41,23 @@ class PhotoAlbumViewController: UIViewController {
         if let mapAnnotation = mapAnnotation {
             self.title = mapAnnotation.pin.name
             
-            FlickrAPIClient.preformImageLocationSearch(from: mapAnnotation) { (photoSearchResponse, error) in
-                if let photoRepsonse = photoSearchResponse {
-                    
-                    for photo in photoRepsonse.photos.photo{
-                        print(photo.url)
-                    }
-                } else {
-                    if let error = error {
-                        self.presentNoActionAlert(title: "Error", message: error.localizedDescription)
-                    }
-                }
-            }
+//            FlickrAPIClient.preformImageLocationSearch(from: mapAnnotation) { (photoSearchResponse, error) in
+//                if let photoRepsonse = photoSearchResponse {
+//
+//                    for photo in photoRepsonse.photos.photo{
+//                        if let url = URL(string: photo.url) {
+//                            let image = FlickrAPIClient.getImageFrom(url: url)
+//                            self.tempImageArray.append(image)
+//                        } else {
+//                            print("not valid url")
+//                        }
+//                    }
+//                } else {
+//                    if let error = error {
+//                        self.presentNoActionAlert(title: "Error", message: error.localizedDescription)
+//                    }
+//                }
+//            }
         }
         
         

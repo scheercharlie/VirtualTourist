@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import UIKit
+import CoreData
 
 class FlickrAPIClient {
     static let apiKey = "8b463f94bbb5f9d350f7092dcd3753f6"
@@ -88,6 +90,47 @@ class FlickrAPIClient {
                 }
             }
         }
+    }
+    
+    static func savePhotoDataFromFetchedImageData(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, completion: @escaping (Bool, Error?) -> Void) {
+        FlickrAPIClient.preformImageLocationSearch(from: mapAnnotation) { (response, error) in
+            guard error == nil, let flickPhotoRepsonse = response else {
+                print("Could not fetch")
+                return completion(false, error)
+            }
+            
+            for photo in flickPhotoRepsonse.photos.photoProperties {
+                guard let url = URL(string: photo.url) else {
+                    print("Could not create URL")
+                    return
+                }
+                
+                let imageData = self.getImageDataFrom(url: url)
+                
+                let photo = Photo.init(context: dataController.backgroundContext)
+                photo.photoData = imageData
+                
+                do {
+                    try dataController.backgroundContext.save()
+                } catch {
+                    print(error)
+                }
+            }
+        }
+    }
+    
+    private static func getImageDataFrom(url: URL) -> Data {
+        var downloadedData = Data()
+        let dataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            guard error == nil, let unWrappeddata = data else {
+                return
+            }
+            
+            downloadedData = unWrappeddata
+        }
+        dataTask.resume()
+        
+        return downloadedData
     }
 }
 
