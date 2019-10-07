@@ -34,6 +34,8 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         } catch {
             print("could not fetch")
         }
+        
+        
     }
     
     func setupFlowLayoutPreferences() {
@@ -44,12 +46,18 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return fetchResultsController.fetchedObjects?.count ?? 0
+        if fetchResultsController != nil, let sections = fetchResultsController.sections {
+            return sections[section].numberOfObjects
+        } else {
+            return 0
+        }
+        
+        
+//        return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath)
-        
         if let image = FlickrAPIClient.getImageFromSavedImageData(photoObject: fetchResultsController.object(at: indexPath)) {
             let imageView: UIImageView = UIImageView(frame: cell.bounds)
             imageView.image = image
