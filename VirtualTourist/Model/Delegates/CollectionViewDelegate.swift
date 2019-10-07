@@ -15,8 +15,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     private let spacing: CGFloat = 16.0
     
     var mapAnnotation: VirtualTouristMapAnnotation!
-    var array: [UIImage]!
-    var urlArray: [String]!
     var vc: UIViewController!
     
     var fetchResultsController: NSFetchedResultsController<Photo>!
@@ -84,22 +82,10 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let storyboard = UIStoryboard.init(name: "MapStoryboard", bundle: Bundle.main)
-        guard let destination = storyboard.instantiateViewController(identifier: "TempViewController") as? TempViewController else {
-            print("nada")
-            return
-        }
-
-        print(urlArray[indexPath.row])
-        print(indexPath.row)
-        destination.image?.image = array[indexPath.row]
-        destination.urlString? = urlArray[indexPath.row]
-//
-//
         print("tapped")
-        
-        vc.navigationController?.pushViewController(destination, animated: true)
     }
+    
+    
     /*CollectionViewCell Spacing code found at https://medium.com/@NickBabo/equally-spaced-uicollectionview-cells-6e60ce8d457b
      Author:Nicholas Babo
      Article: Equally Spaced UICollectionView Cells
