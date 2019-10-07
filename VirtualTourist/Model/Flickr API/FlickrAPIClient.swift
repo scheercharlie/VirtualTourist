@@ -88,14 +88,11 @@ class FlickrAPIClient {
                             photo.photoData = data
                             photo.pin = mapAnnotation.pin
                             
-                            
-                            print(dataController.backgroundContext.hasChanges)
                             do {
                                 try dataController.backgroundContext.save()
                             } catch {
                                 print("Save failed!")
                             }
-                            print(dataController.backgroundContext.hasChanges)
                         }
                         
                         dataTask.resume()
@@ -111,7 +108,7 @@ class FlickrAPIClient {
         }
     }
     
-    static func fetchURLS(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, completion: @escaping (Bool, [URL]?, Error?) -> Void) {
+    static private func fetchURLS(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, completion: @escaping (Bool, [URL]?, Error?) -> Void) {
         FlickrAPIClient.preformImageLocationSearch(from: mapAnnotation) { (success, response, error) in
             guard error == nil, let flickPhotoRepsonse = response else {
                 print("Could not fetch")
@@ -181,7 +178,6 @@ class FlickrAPIClient {
         } else {
             print("Could not convert image")
         }
-        
         
         return image
     }
