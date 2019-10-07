@@ -23,7 +23,7 @@ class FlickrAPIClient {
         
         var stringValue: String {
             switch self {
-            case .getPhotos(let lat, let lon): return endPoints.baseURL + endPoints.api_key_param + "&accuracy=11" + "&lat=" + String(lat) + "&lon=" + String(lon) + "&per_page=5" + "&extras=url_o" + "&format=json&nojsoncallback=1"
+            case .getPhotos(let lat, let lon): return endPoints.baseURL + endPoints.api_key_param + "&accuracy=11" + "&lat=" + String(lat) + "&lon=" + String(lon) + "&extras=url_o" + "&format=json&nojsoncallback=1"
                 
             }
         }
@@ -44,11 +44,11 @@ class FlickrAPIClient {
                 return
             }
             
+            
             let decoder = JSONDecoder()
             
             do {
                 let response = try decoder.decode(ResponseType.self, from: data)
-                
                 DispatchQueue.main.async {
                     completion(true, response, nil)
                 }
@@ -72,64 +72,69 @@ class FlickrAPIClient {
         task.resume()
     }
     
-    static func fetchPhotos(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, completion: @escaping (Bool, Error?) -> Void) {
-        FlickrAPIClient.fetchURLS(mapAnnotation: mapAnnotation, dataController: dataController) { (success, urls, error) in
-            if success {
-                
-                if let urls = urls {
-                    
-                    for url in urls {
-                        let dataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                            guard error == nil, let data = data else {
-                                return
-                            }
-                            
-                            let photo = Photo.init(context: dataController.viewContext)
-                            photo.photoData = data
-                            photo.pin = mapAnnotation.pin
-                            
-                            do {
-                                try dataController.backgroundContext.save()
-                            } catch {
-                                print("Save failed!")
-                            }
-                        }
-                        
-                        dataTask.resume()
-                        
-                    }
-                }
-            } else {
-                DispatchQueue.main.async {
-                    completion(false, error)
-                }
-            }
-            
-        }
-    }
+//    static func fetchPhotos(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, completion: @escaping (Bool, Error?) -> Void) {
+//        FlickrAPIClient.fetchURLS(mapAnnotation: mapAnnotation, dataController: dataController) { (success, urls, error) in
+//            if success {
+//                
+//                if let urls = urls {
+//                    
+//                    for url in urls {
+//                        let dataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
+//                            guard error == nil, let data = data else {
+//                                return
+//                            }
+//                            
+//                            let photo = Photo.init(context: dataController.viewContext)
+//                            photo.photoData = data
+//                            photo.pin = mapAnnotation.pin
+//                            
+//                            do {
+//                                try dataController.backgroundContext.save()
+//                            } catch {
+//                                print("Save failed!")
+//                            }
+//                        }
+//                        
+//                        dataTask.resume()
+//                        
+//                    }
+//                }
+//            } else {
+//                DispatchQueue.main.async {
+//                    completion(false, error)
+//                }
+//            }
+//            
+//        }
+//    }
     
-    static private func fetchURLS(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, completion: @escaping (Bool, [URL]?, Error?) -> Void) {
+    static func fetchImageURLS(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, completion: @escaping (Bool, Error?) -> Void) {
         FlickrAPIClient.preformImageLocationSearch(from: mapAnnotation) { (success, response, error) in
             guard error == nil, let flickPhotoRepsonse = response else {
                 print("Could not fetch")
                 DispatchQueue.main.async {
-                    completion(false, nil, error)
+                    completion(false, error)
                 }
                 return
             }
             
-            var URLArray: [URL] = []
+            
             
             for photo in flickPhotoRepsonse.photos.photoProperties {
-                guard let url = URL(string: photo.url) else {
-                    print("Could not create URL")
-                    return
+                if let urlString = photo.url, let url = URL(string: urlString) {
+                   let newPhoto = Photo(context: dataController.viewContext)
+                    newPhoto.url = url
+                    newPhoto.pin = mapAnnotation.pin
+                    
+                    do {
+                        try dataController.viewContext.save()
+                    } catch {
+                        print("Could not save new Photo")
+                    }
                 }
-             
-                URLArray.append(url)
             }
             DispatchQueue.main.async {
-                completion(true, URLArray, nil)
+                completion(true, nil)
             }
         }
     }

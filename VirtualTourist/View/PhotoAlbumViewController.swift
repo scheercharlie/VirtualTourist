@@ -26,15 +26,6 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        FlickrAPIClient.fetchPhotos(mapAnnotation: mapAnnotation!, dataController: dataController!) { (success, error) in
-            if success {
-                print("should have saved data")
-            } else {
-                print("failed")
-            }
-        }
-        
-        
         let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "objectID", ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "pin == %@", mapAnnotation!.pin)

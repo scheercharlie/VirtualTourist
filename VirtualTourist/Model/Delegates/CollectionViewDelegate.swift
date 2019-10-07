@@ -35,7 +35,8 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         } catch {
             print("could not fetch")
         }
-        
+        print(fetchResultsController.fetchedObjects?.count)
+        print("in collection view init")
         
     }
     
@@ -48,9 +49,17 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if fetchResultsController != nil, let sections = fetchResultsController.sections {
-            return sections[section].numberOfObjects
+            if sections[section].numberOfObjects > 30 {
+                print("return 30")
+                return 30
+            } else {
+                print("return count")
+                print(sections[section].numberOfObjects)
+                return sections[section].numberOfObjects
+            }
         } else {
-            return 5
+            print("return 10")
+            return 10
         }
     }
     

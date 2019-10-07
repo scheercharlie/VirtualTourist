@@ -40,7 +40,7 @@ struct JSONPhotoProperty: Codable {
     let ispublic: Int
     let isfriend: Int
     let isfamily: Int
-    let url: String
+    let url: String?
     
     enum CodingKeys: String, CodingKey {
         case id

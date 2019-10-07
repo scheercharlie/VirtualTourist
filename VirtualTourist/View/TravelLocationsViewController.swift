@@ -107,6 +107,15 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
                                         managedObjectContext: self.dataController.viewContext)
                 
                 self.savePinToStorage(mapAnnotation.pin)
+                
+                
+                FlickrAPIClient.fetchImageURLS(mapAnnotation: mapAnnotation, dataController: self.dataController) { (success, error) in
+                    if success {
+                        print("should have saved data")
+                    } else {
+                        print("failed")
+                    }
+                }
             } else {
                 print(error?.localizedDescription ?? "Generic Error")
             }
