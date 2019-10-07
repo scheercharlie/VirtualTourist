@@ -37,6 +37,7 @@ class DataController {
                 //TO DO: handle the error better
                 fatalError("Could not load persistent store")
             }
+            self.configureContexts()
             completion?()
         }
     }

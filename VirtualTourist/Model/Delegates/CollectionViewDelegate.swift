@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import CoreData
 
-class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, NSFetchedResultsControllerDelegate {
     var flowLayout: UICollectionViewFlowLayout!
     private let spacing: CGFloat = 16.0
     
@@ -19,35 +19,43 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     var urlArray: [String]!
     var vc: UIViewController!
     
-    init(flowLayout: UICollectionViewFlowLayout, mapAnnotation: VirtualTouristMapAnnotation, vc: UIViewController) {
+    var fetchResultsController: NSFetchedResultsController<Photo>!
+    
+    init(flowLayout: UICollectionViewFlowLayout, mapAnnotation: VirtualTouristMapAnnotation, fetchRequest: NSFetchRequest<Photo>, objectContext: NSManagedObjectContext) {
         self.flowLayout = flowLayout
         self.mapAnnotation = mapAnnotation
-        self.array = []
-        self.urlArray = []
-        self.vc = vc
+        
+        self.fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: objectContext, sectionNameKeyPath: nil, cacheName: "photos")
+        
         super.init()
-        self.getArray()
-
-    }
-    
-    func getArray() {
-        FlickrAPIClient.preformImageLocationSearch(from: mapAnnotation) { (photoSearchResponse, error) in
-            if let photoRepsonse = photoSearchResponse {
-                
-                for photo in photoRepsonse.photos.photo{
-                    if let url = URL(string: photo.url) {
-                        let image = FlickrAPIClient.getImageFrom(url: url)
-                        self.urlArray.append(photo.url)
-                        self.array.append(image)
-                        print(self.array.count)
-                        print(self.urlArray.count)
-                    } else {
-                        print("not valid url")
-                    }
-                }
-            }
+        
+        self.fetchResultsController.delegate = self
+        
+        do {
+            try fetchResultsController.performFetch()
+        } catch {
+            print("could not fetch")
         }
     }
+    
+//    func getArray() {
+//        FlickrAPIClient.preformImageLocationSearch(from: mapAnnotation) { (photoSearchResponse, error) in
+//            if let photoRepsonse = photoSearchResponse {
+//
+//                for photo in photoRepsonse.photos.photo{
+//                    if let url = URL(string: photo.url) {
+//                        let image = FlickrAPIClient.getImageFrom(url: url)
+//                        self.urlArray.append(photo.url)
+//                        self.array.append(image)
+//                        print(self.array.count)
+//                        print(self.urlArray.count)
+//                    } else {
+//                        print("not valid url")
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     func setupFlowLayoutPreferences() {
         flowLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
