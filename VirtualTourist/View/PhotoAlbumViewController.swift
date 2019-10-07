@@ -40,7 +40,7 @@ class PhotoAlbumViewController: UIViewController {
         fetchRequest.predicate = NSPredicate(format: "pin == %@", mapAnnotation!.pin)
 
         
-        collectionViewDelegate = CollectionViewDelegate(flowLayout: flowLayout, mapAnnotation: mapAnnotation!, fetchRequest: fetchRequest, objectContext: dataController.viewContext)
+        collectionViewDelegate = CollectionViewDelegate(flowLayout: flowLayout, mapAnnotation: mapAnnotation!, fetchRequest: fetchRequest, dataController: dataController)
         collectionViewDelegate.mapAnnotation = mapAnnotation
         
         collectionView.delegate = collectionViewDelegate

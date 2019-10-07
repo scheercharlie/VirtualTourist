@@ -15,15 +15,16 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     private let spacing: CGFloat = 16.0
     
     var mapAnnotation: VirtualTouristMapAnnotation!
-    var vc: UIViewController!
+    var dataController: DataController!
     
     var fetchResultsController: NSFetchedResultsController<Photo>!
     
-    init(flowLayout: UICollectionViewFlowLayout, mapAnnotation: VirtualTouristMapAnnotation, fetchRequest: NSFetchRequest<Photo>, objectContext: NSManagedObjectContext) {
+    init(flowLayout: UICollectionViewFlowLayout, mapAnnotation: VirtualTouristMapAnnotation, fetchRequest: NSFetchRequest<Photo>, dataController: DataController) {
         self.flowLayout = flowLayout
         self.mapAnnotation = mapAnnotation
+        self.dataController = dataController
         
-        self.fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: objectContext, sectionNameKeyPath: nil, cacheName: "photos")
+        self.fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: "photos")
         
         super.init()
         
@@ -49,21 +50,38 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         if fetchResultsController != nil, let sections = fetchResultsController.sections {
             return sections[section].numberOfObjects
         } else {
-            return 0
+            return 5
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath)
-        if let image = FlickrAPIClient.getImageFromSavedImageData(photoObject: fetchResultsController.object(at: indexPath)) {
-            let imageView: UIImageView = UIImageView(frame: cell.bounds)
-            imageView.image = image
-            cell.contentView.addSubview(imageView)
+
+        cell.backgroundColor = UIColor.lightGray
+        let imageView = UIImageView(frame: cell.bounds)
+        
+        let photo = fetchResultsController.object(at: indexPath)
+        if photo.photoData == nil {
+            DispatchQueue.global().async {
+                if let data = try? Data(contentsOf: photo.url!) {
+                    DispatchQueue.main.async {
+                        photo.photoData = data
+                        try? self.dataController.backgroundContext.save()
+                        
+                        imageView.image = UIImage(data: data)
+                        cell.contentView.addSubview(imageView)
+                    }
+                }
+            }
         } else {
-            let imageView: UIImageView = UIImageView(frame: cell.bounds)
-            imageView.image = UIImage(named: "VirtualTourist_120")
-            cell.contentView.addSubview(imageView)
+            if let data = photo.photoData {
+                DispatchQueue.main.async {
+                    imageView.image = UIImage(data: data)
+                    cell.contentView.addSubview(imageView)
+                }
+            }
         }
+        
         return cell
     }
     
