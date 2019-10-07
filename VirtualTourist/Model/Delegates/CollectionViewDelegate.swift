@@ -51,9 +51,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         } else {
             return 0
         }
-        
-        
-//        return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

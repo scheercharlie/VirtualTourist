@@ -75,7 +75,7 @@ class FlickrAPIClient {
     static func fetchPhotos(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, completion: @escaping (Bool, Error?) -> Void) {
         FlickrAPIClient.fetchURLS(mapAnnotation: mapAnnotation, dataController: dataController) { (success, urls, error) in
             if success {
-                print(urls)
+                
                 if let urls = urls {
                     
                     for url in urls {
@@ -87,37 +87,24 @@ class FlickrAPIClient {
                             let photo = Photo.init(context: dataController.viewContext)
                             photo.photoData = data
                             photo.pin = mapAnnotation.pin
-                            print(photo.photoData)
                             
-                            print(dataController.viewContext.hasChanges)
+                            
+                            print(dataController.backgroundContext.hasChanges)
                             do {
-                                try dataController.viewContext.save()
-                                print("in save")
+                                try dataController.backgroundContext.save()
                             } catch {
-                                print("couldn't save")
+                                print("Save failed!")
                             }
-                            print(dataController.viewContext.hasChanges)
+                            print(dataController.backgroundContext.hasChanges)
                         }
                         
                         dataTask.resume()
                         
                     }
-                    print("finished")
-                    do {
-                        try dataController.backgroundContext.save()
-                    } catch {
-                        print("nope")
-                    }
-                    DispatchQueue.main.async {
-                        completion(true, nil)
-                    }
-                    
-                    print("waited?")
                 }
             } else {
                 DispatchQueue.main.async {
                     completion(false, error)
-                    print(error?.localizedDescription)
                 }
             }
             
