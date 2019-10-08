@@ -99,42 +99,11 @@
                         <outlet property="collectionView" destination="ViK-0a-F4t" id="TnM-Lw-vf9"/>
                         <outlet property="flowLayout" destination="iAv-VB-sLY" id="JgT-kq-Okg"/>
                         <outlet property="mapView" destination="rrO-uw-4w1" id="zy8-b0-nLF"/>
-                        <segue destination="XAj-v8-ZwK" kind="show" identifier="show" id="XhA-iW-Hhh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7te-KD-JZC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2327.536231884058" y="190.84821428571428"/>
-        </scene>
-        <!--Temp View Controller-->
-        <scene sceneID="9ea-pO-YmL">
-            <objects>
-                <viewController storyboardIdentifier="TempViewController" id="XAj-v8-ZwK" customClass="TempViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="L3K-qs-s1R">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Q0O-BM-a0R">
-                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
-                            </imageView>
-                        </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <constraints>
-                            <constraint firstItem="aQN-K4-0wV" firstAttribute="bottom" secondItem="Q0O-BM-a0R" secondAttribute="bottom" id="A3T-Ld-ufp"/>
-                            <constraint firstItem="aQN-K4-0wV" firstAttribute="trailing" secondItem="Q0O-BM-a0R" secondAttribute="trailing" id="PUl-c9-2iE"/>
-                            <constraint firstItem="Q0O-BM-a0R" firstAttribute="top" secondItem="aQN-K4-0wV" secondAttribute="top" id="cev-Ab-UqB"/>
-                            <constraint firstItem="Q0O-BM-a0R" firstAttribute="leading" secondItem="aQN-K4-0wV" secondAttribute="leading" id="o7Z-B5-Dgr"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="aQN-K4-0wV"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="eLQ-h9-DDK"/>
-                    <connections>
-                        <outlet property="image" destination="Q0O-BM-a0R" id="NgU-gZ-34g"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="UPk-hK-1RQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3284" y="191"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="GqF-4g-8OE">
