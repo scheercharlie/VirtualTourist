@@ -18,8 +18,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     var dataController: DataController!
     var vc: PhotoAlbumViewController!
     
-    var isLoading = false
-    
     var fetchResultsController: NSFetchedResultsController<Photo>!
     
     init(flowLayout: UICollectionViewFlowLayout, mapAnnotation: VirtualTouristMapAnnotation, fetchRequest: NSFetchRequest<Photo>, dataController: DataController, viewController: PhotoAlbumViewController) {
@@ -58,10 +56,13 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         } else {
             return 10
         }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as? CollectionViewCell else {
+            return UICollectionViewCell()
+        }
 
         cell.backgroundColor = UIColor.lightGray
         let imageView = UIImageView(frame: cell.bounds)
@@ -69,18 +70,21 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         activityIndicator.hidesWhenStopped = true
         collectionView.addSubview(activityIndicator)
         
+        
+        startAnimating(activityIndicator, true)
+        
         let photo = fetchResultsController.object(at: indexPath)
         if photo.photoData == nil {
             DispatchQueue.global().async {
                 if let data = try? Data(contentsOf: photo.url!) {
                     DispatchQueue.main.async {
-                        activityIndicator.startAnimating()
-                        self.vc.reloadButton.isEnabled = false
-                        photo.photoData = data
                         try? self.dataController.backgroundContext.save()
 
                         imageView.image = UIImage(data: data)
                         cell.contentView.addSubview(imageView)
+                        
+                        self.startAnimating(activityIndicator, false)
+                        
                     }
                 }
             }
@@ -88,27 +92,26 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             if let data = photo.photoData {
                 DispatchQueue.main.async {
                     activityIndicator.startAnimating()
-                    self.vc.reloadButton.isEnabled = false
-                    self.setIsLoadingTo(true)
+//                    self.vc.reloadButton.isEnabled = false
+//                    self.setIsLoadingTo(true)
                     imageView.image = UIImage(data: data)
                     cell.contentView.addSubview(imageView)
                 }
             }
         }
-        activityIndicator.stopAnimating()
-        vc.reloadButton.isEnabled = true
-        setIsLoadingTo(false)
+        
         return cell
     }
     
-    func setIsLoadingTo(_ bool: Bool) {
+    func startAnimating(_ activityIndicator: UIActivityIndicatorView, _ bool: Bool) {
         if bool {
-            isLoading = true
+            activityIndicator.startAnimating()
+            vc.reloadButton.isEnabled = false
         } else {
-            isLoading = false
+            activityIndicator.stopAnimating()
+            vc.reloadButton.isEnabled = true
         }
     }
-    
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

@@ -11,4 +11,14 @@ import UIKit
 
 class CollectionViewCell: UICollectionViewCell {
     
+    @IBOutlet weak var imageView: UIImageView!
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        print("preparing")
+        imageView.image = nil
+        backgroundColor = UIColor.lightGray
+        
+        
+    }
 }
