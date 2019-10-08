@@ -35,9 +35,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         } catch {
             print("could not fetch")
         }
-        print(fetchResultsController.fetchedObjects?.count)
-        print("in collection view init")
-        
     }
     
     func setupFlowLayoutPreferences() {
@@ -50,15 +47,11 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if fetchResultsController != nil, let sections = fetchResultsController.sections {
             if sections[section].numberOfObjects > 30 {
-                print("return 30")
                 return 30
             } else {
-                print("return count")
-                print(sections[section].numberOfObjects)
                 return sections[section].numberOfObjects
             }
         } else {
-            print("return 10")
             return 10
         }
     }
@@ -68,12 +61,16 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
 
         cell.backgroundColor = UIColor.lightGray
         let imageView = UIImageView(frame: cell.bounds)
+        let activityIndicator = UIActivityIndicatorView(frame: collectionView.bounds)
+        activityIndicator.hidesWhenStopped = true
+        collectionView.addSubview(activityIndicator)
         
         let photo = fetchResultsController.object(at: indexPath)
         if photo.photoData == nil {
             DispatchQueue.global().async {
                 if let data = try? Data(contentsOf: photo.url!) {
                     DispatchQueue.main.async {
+                        activityIndicator.startAnimating()
                         photo.photoData = data
                         try? self.dataController.backgroundContext.save()
                         
@@ -85,12 +82,13 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         } else {
             if let data = photo.photoData {
                 DispatchQueue.main.async {
+                    activityIndicator.startAnimating()
                     imageView.image = UIImage(data: data)
                     cell.contentView.addSubview(imageView)
                 }
             }
         }
-        
+        activityIndicator.stopAnimating()
         return cell
     }
     

@@ -72,42 +72,6 @@ class FlickrAPIClient {
         task.resume()
     }
     
-//    static func fetchPhotos(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, completion: @escaping (Bool, Error?) -> Void) {
-//        FlickrAPIClient.fetchURLS(mapAnnotation: mapAnnotation, dataController: dataController) { (success, urls, error) in
-//            if success {
-//                
-//                if let urls = urls {
-//                    
-//                    for url in urls {
-//                        let dataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
-//                            guard error == nil, let data = data else {
-//                                return
-//                            }
-//                            
-//                            let photo = Photo.init(context: dataController.viewContext)
-//                            photo.photoData = data
-//                            photo.pin = mapAnnotation.pin
-//                            
-//                            do {
-//                                try dataController.backgroundContext.save()
-//                            } catch {
-//                                print("Save failed!")
-//                            }
-//                        }
-//                        
-//                        dataTask.resume()
-//                        
-//                    }
-//                }
-//            } else {
-//                DispatchQueue.main.async {
-//                    completion(false, error)
-//                }
-//            }
-//            
-//        }
-//    }
-    
     static func fetchImageURLS(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, completion: @escaping (Bool, Error?) -> Void) {
         FlickrAPIClient.preformImageLocationSearch(from: mapAnnotation) { (success, response, error) in
             guard error == nil, let flickPhotoRepsonse = response else {
@@ -117,8 +81,6 @@ class FlickrAPIClient {
                 }
                 return
             }
-            
-            
             
             for photo in flickPhotoRepsonse.photos.photoProperties {
                 if let urlString = photo.url, let url = URL(string: urlString) {
