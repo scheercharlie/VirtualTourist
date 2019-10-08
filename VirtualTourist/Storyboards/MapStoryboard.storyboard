@@ -60,7 +60,7 @@
                                 </connections>
                             </mapView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ViK-0a-F4t">
-                                <rect key="frame" x="0.0" y="288" width="414" height="574"/>
+                                <rect key="frame" x="0.0" y="288" width="414" height="499"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="iAv-VB-sLY">
                                     <size key="itemSize" width="102" height="89"/>
@@ -81,16 +81,43 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="cIM-HD-zSm">
+                                <rect key="frame" x="0.0" y="787" width="414" height="75"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fO0-DA-Fso">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="75"/>
+                                        <color key="backgroundColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="Reload Images">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="reloadWasTapped:" destination="eLh-Zo-0WW" eventType="touchUpInside" id="YWW-Vo-S8z"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="fO0-DA-Fso" secondAttribute="bottom" id="42O-ri-Gu5"/>
+                                    <constraint firstAttribute="height" constant="75" id="PLg-9t-1l6"/>
+                                    <constraint firstItem="fO0-DA-Fso" firstAttribute="top" secondItem="cIM-HD-zSm" secondAttribute="top" id="Tsz-RR-0xr"/>
+                                    <constraint firstAttribute="trailing" secondItem="fO0-DA-Fso" secondAttribute="trailing" id="b9a-ax-uSt"/>
+                                    <constraint firstItem="fO0-DA-Fso" firstAttribute="centerX" secondItem="cIM-HD-zSm" secondAttribute="centerX" id="bw2-Ab-ltQ"/>
+                                    <constraint firstItem="fO0-DA-Fso" firstAttribute="centerY" secondItem="cIM-HD-zSm" secondAttribute="centerY" id="rHk-el-Y0F"/>
+                                    <constraint firstItem="fO0-DA-Fso" firstAttribute="leading" secondItem="cIM-HD-zSm" secondAttribute="leading" id="swv-HZ-67f"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="cIM-HD-zSm" firstAttribute="leading" secondItem="2Ou-Ab-cuQ" secondAttribute="leading" id="Alf-So-Jnl"/>
                             <constraint firstItem="ViK-0a-F4t" firstAttribute="leading" secondItem="2Ou-Ab-cuQ" secondAttribute="leading" id="E7r-lm-uKT"/>
-                            <constraint firstItem="2Ou-Ab-cuQ" firstAttribute="bottom" secondItem="ViK-0a-F4t" secondAttribute="bottom" id="FHk-4F-Ltr"/>
                             <constraint firstItem="2Ou-Ab-cuQ" firstAttribute="trailing" secondItem="rrO-uw-4w1" secondAttribute="trailing" id="Y1x-qf-ZUc"/>
+                            <constraint firstItem="cIM-HD-zSm" firstAttribute="trailing" secondItem="2Ou-Ab-cuQ" secondAttribute="trailing" id="d1L-jE-0AZ"/>
                             <constraint firstItem="2Ou-Ab-cuQ" firstAttribute="trailing" secondItem="ViK-0a-F4t" secondAttribute="trailing" id="lq2-aD-dhx"/>
                             <constraint firstItem="ViK-0a-F4t" firstAttribute="top" secondItem="rrO-uw-4w1" secondAttribute="bottom" id="q2U-mZ-ngD"/>
+                            <constraint firstItem="cIM-HD-zSm" firstAttribute="bottom" secondItem="2Ou-Ab-cuQ" secondAttribute="bottom" id="qi0-8R-vHF"/>
                             <constraint firstItem="rrO-uw-4w1" firstAttribute="top" secondItem="2Ou-Ab-cuQ" secondAttribute="top" id="uwl-96-CfV"/>
                             <constraint firstItem="rrO-uw-4w1" firstAttribute="leading" secondItem="2Ou-Ab-cuQ" secondAttribute="leading" id="wXc-oj-twT"/>
+                            <constraint firstItem="cIM-HD-zSm" firstAttribute="top" secondItem="ViK-0a-F4t" secondAttribute="bottom" id="ydt-ia-Nyq"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="2Ou-Ab-cuQ"/>
                     </view>
@@ -99,6 +126,7 @@
                         <outlet property="collectionView" destination="ViK-0a-F4t" id="TnM-Lw-vf9"/>
                         <outlet property="flowLayout" destination="iAv-VB-sLY" id="JgT-kq-Okg"/>
                         <outlet property="mapView" destination="rrO-uw-4w1" id="zy8-b0-nLF"/>
+                        <outlet property="reloadButton" destination="fO0-DA-Fso" id="TSY-gD-0BV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7te-KD-JZC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

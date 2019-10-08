@@ -16,6 +16,7 @@ class PhotoAlbumViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var reloadButton: UIButton!
     
     var mapAnnotation: VirtualTouristMapAnnotation?
     var mapViewDelegate: MapViewDelegate!
@@ -31,7 +32,7 @@ class PhotoAlbumViewController: UIViewController {
         fetchRequest.predicate = NSPredicate(format: "pin == %@", mapAnnotation!.pin)
 
         
-        collectionViewDelegate = CollectionViewDelegate(flowLayout: flowLayout, mapAnnotation: mapAnnotation!, fetchRequest: fetchRequest, dataController: dataController)
+        collectionViewDelegate = CollectionViewDelegate(flowLayout: flowLayout, mapAnnotation: mapAnnotation!, fetchRequest: fetchRequest, dataController: dataController, viewController: self)
         collectionViewDelegate.mapAnnotation = mapAnnotation
         
         collectionView.delegate = collectionViewDelegate
@@ -62,6 +63,11 @@ class PhotoAlbumViewController: UIViewController {
             mapView.isUserInteractionEnabled = false
             
         }
+    }
+    
+    @IBAction func reloadWasTapped(_ sender: Any) {
+        print("reload images was tapped")
+        
     }
 }
 

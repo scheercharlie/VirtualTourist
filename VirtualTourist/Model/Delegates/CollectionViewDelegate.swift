@@ -16,13 +16,17 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     
     var mapAnnotation: VirtualTouristMapAnnotation!
     var dataController: DataController!
+    var vc: PhotoAlbumViewController!
+    
+    var isLoading = false
     
     var fetchResultsController: NSFetchedResultsController<Photo>!
     
-    init(flowLayout: UICollectionViewFlowLayout, mapAnnotation: VirtualTouristMapAnnotation, fetchRequest: NSFetchRequest<Photo>, dataController: DataController) {
+    init(flowLayout: UICollectionViewFlowLayout, mapAnnotation: VirtualTouristMapAnnotation, fetchRequest: NSFetchRequest<Photo>, dataController: DataController, viewController: PhotoAlbumViewController) {
         self.flowLayout = flowLayout
         self.mapAnnotation = mapAnnotation
         self.dataController = dataController
+        self.vc = viewController
         
         self.fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: "photos")
         
@@ -71,9 +75,10 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
                 if let data = try? Data(contentsOf: photo.url!) {
                     DispatchQueue.main.async {
                         activityIndicator.startAnimating()
+                        self.vc.reloadButton.isEnabled = false
                         photo.photoData = data
                         try? self.dataController.backgroundContext.save()
-                        
+
                         imageView.image = UIImage(data: data)
                         cell.contentView.addSubview(imageView)
                     }
@@ -83,14 +88,27 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             if let data = photo.photoData {
                 DispatchQueue.main.async {
                     activityIndicator.startAnimating()
+                    self.vc.reloadButton.isEnabled = false
+                    self.setIsLoadingTo(true)
                     imageView.image = UIImage(data: data)
                     cell.contentView.addSubview(imageView)
                 }
             }
         }
         activityIndicator.stopAnimating()
+        vc.reloadButton.isEnabled = true
+        setIsLoadingTo(false)
         return cell
     }
+    
+    func setIsLoadingTo(_ bool: Bool) {
+        if bool {
+            isLoading = true
+        } else {
+            isLoading = false
+        }
+    }
+    
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
