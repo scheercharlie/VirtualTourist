@@ -47,12 +47,10 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
         if fetchResultsController != nil, let sections = fetchResultsController.sections {
-            if sections[section].numberOfObjects > 30 {
-                return 30
-            } else {
-                return sections[section].numberOfObjects
-            }
+            print(sections[section].numberOfObjects)
+            return sections[section].numberOfObjects
         } else {
             return 10
         }
@@ -116,7 +114,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("tapped")
-        
     }
     
     
