@@ -69,6 +69,7 @@ class PhotoAlbumViewController: UIViewController {
     
     @IBAction func reloadWasTapped(_ sender: Any) {
         let cells = collectionView.visibleCells
+        print(cells.count)
         
         collectionViewDelegate.removeAllVisibleCells(cells: cells)
         

@@ -61,24 +61,10 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as? CollectionViewCell else {
-            return UICollectionViewCell()
-        }
-
-        cell.backgroundColor = UIColor.lightGray
-        let imageView = UIImageView(frame: cell.bounds)
-        let activityIndicator = UIActivityIndicatorView(frame: collectionView.bounds)
-        activityIndicator.hidesWhenStopped = true
-        collectionView.addSubview(activityIndicator)
-        
-        
-        startAnimating(activityIndicator, true)
-        
-        let photo = fetchResultsController.object(at: indexPath)
+    fileprivate func displayPhotoFor(_ photo: Photo, _ photourl: URL, _ imageView: UIImageView, _ cell: CollectionViewCell, _ activityIndicator: UIActivityIndicatorView) {
         if photo.photoData == nil {
             DispatchQueue.global().async {
-                if let data = try? Data(contentsOf: photo.url!) {
+                if let data = try? Data(contentsOf: photourl) {
                     DispatchQueue.main.async {
                         try? self.dataController.backgroundContext.save()
                         imageView.image = UIImage(data: data)
@@ -97,7 +83,29 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
                 }
             }
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as? CollectionViewCell else {
+            return UICollectionViewCell()
+        }
+
+        cell.backgroundColor = UIColor.lightGray
+        let imageView = UIImageView(frame: cell.bounds)
+        let activityIndicator = UIActivityIndicatorView(frame: collectionView.bounds)
+        activityIndicator.hidesWhenStopped = true
+        collectionView.addSubview(activityIndicator)
         
+        
+        startAnimating(activityIndicator, true)
+        
+
+        let photo = fetchResultsController.object(at: indexPath)
+        if let photourl = photo.url {
+            displayPhotoFor(photo, photourl, imageView, cell, activityIndicator)
+        } else {
+            
+        }
         return cell
     }
     
@@ -154,13 +162,12 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         for index in 0...cells.count {
             let object = fetchResultsController.object(at: IndexPath(item: index, section: 0))
             dataController.viewContext.delete(object)
-        }
-        
-        if dataController.viewContext.hasChanges {
-            do {
-                try dataController.viewContext.save()
-            } catch {
-                print("couldn't save")
+            if dataController.viewContext.hasChanges {
+                do {
+                    try dataController.viewContext.save()
+                } catch {
+                    print("couldn't save")
+                }
             }
         }
     }
