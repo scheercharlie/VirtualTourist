@@ -65,11 +65,10 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as? CollectionViewCell else {
             return UICollectionViewCell()
         }
-        
-        print(collectionView.frame.width)
-        print(collectionView.bounds.width)
+
         cell.backgroundColor = UIColor.lightGray
-        cell.imageView.frame = cell.bounds
+        let imageView = UIImageView()
+        imageView.bounds = cell.bounds
         let activityIndicator = UIActivityIndicatorView(frame: collectionView.bounds)
         activityIndicator.hidesWhenStopped = true
         collectionView.addSubview(activityIndicator)
@@ -83,8 +82,8 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
                 if let data = try? Data(contentsOf: photo.url!) {
                     DispatchQueue.main.async {
                         try? self.dataController.backgroundContext.save()
-                        cell.imageView.image = UIImage(data: data)
-                        
+                        imageView.image = UIImage(data: data)
+                        cell.addSubview(imageView)
                         self.startAnimating(activityIndicator, false)
                         
                     }
@@ -94,7 +93,8 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             if let data = photo.photoData {
                 DispatchQueue.main.async {
                     activityIndicator.startAnimating()
-                    cell.imageView.image = UIImage(data: data)
+                    imageView.image = UIImage(data: data)
+                    cell.addSubview(imageView)
                 }
             }
         }
@@ -124,22 +124,13 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             print(error)
         }
     }
-//
-//    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//
-//    }
-//
-//    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//
-//    }
-//
+
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
         case .insert:
             collectionView.insertItems(at: [newIndexPath!])
         case .delete:
-            let cell = collectionView.cellForItem(at: indexPath!) as! CollectionViewCell
-            cell.imageView.image = nil
+            collectionView.deleteItems(at: [indexPath!])
         default:
             break
         }
