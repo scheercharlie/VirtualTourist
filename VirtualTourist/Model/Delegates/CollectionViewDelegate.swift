@@ -149,4 +149,19 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         let width = (collectionView.bounds.width - totalSpacing) / numberOfItemsPerRow
         return CGSize(width: 100, height: 100)
     }
+    
+    func removeAllVisibleCells(cells: [UICollectionViewCell]) {
+        for index in 0...cells.count {
+            let object = fetchResultsController.object(at: IndexPath(item: index, section: 0))
+            dataController.viewContext.delete(object)
+        }
+        
+        if dataController.viewContext.hasChanges {
+            do {
+                try dataController.viewContext.save()
+            } catch {
+                print("couldn't save")
+            }
+        }
+    }
 }

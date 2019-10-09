@@ -68,7 +68,9 @@ class PhotoAlbumViewController: UIViewController {
     }
     
     @IBAction func reloadWasTapped(_ sender: Any) {
-        print("reload images was tapped")
+        let cells = collectionView.visibleCells
+        
+        collectionViewDelegate.removeAllVisibleCells(cells: cells)
         
     }
 }
