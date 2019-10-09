@@ -37,6 +37,8 @@ class PhotoAlbumViewController: UIViewController {
         
         collectionView.delegate = collectionViewDelegate
         collectionView.dataSource = collectionViewDelegate
+        collectionView.collectionViewLayout = flowLayout
+        
         
         
         setupMapView()

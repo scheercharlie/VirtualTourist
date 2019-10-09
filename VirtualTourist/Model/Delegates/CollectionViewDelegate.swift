@@ -12,7 +12,7 @@ import CoreData
 
 class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, NSFetchedResultsControllerDelegate {
     var flowLayout: UICollectionViewFlowLayout!
-    private let spacing: CGFloat = 16.0
+    private let spacing: CGFloat = 5
     
     var mapAnnotation: VirtualTouristMapAnnotation!
     var dataController: DataController!
@@ -41,11 +41,14 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     }
     
     func setupFlowLayoutPreferences() {
-        flowLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        flowLayout.sectionInset = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
         flowLayout.minimumInteritemSpacing = 10
         flowLayout.minimumLineSpacing = 10
-        flowLayout.itemSize = CGSize(width: 50, height: 50)
+        flowLayout.itemSize = CGSize(width: 100, height: 100)
+        flowLayout.estimatedItemSize = CGSize(width: 100, height: 100)
     }
+    
+    
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
@@ -62,9 +65,11 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as? CollectionViewCell else {
             return UICollectionViewCell()
         }
-
+        
+        print(collectionView.frame.width)
+        print(collectionView.bounds.width)
         cell.backgroundColor = UIColor.lightGray
-        let imageView = UIImageView(frame: cell.bounds)
+        cell.imageView.frame = cell.bounds
         let activityIndicator = UIActivityIndicatorView(frame: collectionView.bounds)
         activityIndicator.hidesWhenStopped = true
         collectionView.addSubview(activityIndicator)
@@ -78,9 +83,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
                 if let data = try? Data(contentsOf: photo.url!) {
                     DispatchQueue.main.async {
                         try? self.dataController.backgroundContext.save()
-
-                        imageView.image = UIImage(data: data)
-                        cell.contentView.addSubview(imageView)
+                        cell.imageView.image = UIImage(data: data)
                         
                         self.startAnimating(activityIndicator, false)
                         
@@ -91,10 +94,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             if let data = photo.photoData {
                 DispatchQueue.main.async {
                     activityIndicator.startAnimating()
-//                    self.vc.reloadButton.isEnabled = false
-//                    self.setIsLoadingTo(true)
-                    imageView.image = UIImage(data: data)
-                    cell.contentView.addSubview(imageView)
+                    cell.imageView.image = UIImage(data: data)
                 }
             }
         }
@@ -124,21 +124,22 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             print(error)
         }
     }
-//    
+//
 //    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//        
+//
 //    }
 //
 //    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//        
+//
 //    }
-//    
+//
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
         case .insert:
             collectionView.insertItems(at: [newIndexPath!])
         case .delete:
-            collectionView.deleteItems(at: [indexPath!])
+            let cell = collectionView.cellForItem(at: indexPath!) as! CollectionViewCell
+            cell.imageView.image = nil
         default:
             break
         }
@@ -150,16 +151,12 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
      Article: Equally Spaced UICollectionView Cells
      Site: Medium*/
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let numberOfItemsPerRow: CGFloat = 3
-        let spacingBetweenItems: CGFloat = 16
         
+        let numberOfItemsPerRow: CGFloat = 3
+        let spacingBetweenItems: CGFloat = 5
         let totalSpacing = (2 * self.spacing) + ((numberOfItemsPerRow - 1) * spacingBetweenItems)
         
-        
         let width = (collectionView.bounds.width - totalSpacing) / numberOfItemsPerRow
-        return CGSize(width: width, height: width)
-        
-        
+        return CGSize(width: 100, height: 100)
     }
-    
 }
