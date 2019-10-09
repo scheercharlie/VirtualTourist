@@ -67,8 +67,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         }
 
         cell.backgroundColor = UIColor.lightGray
-        let imageView = UIImageView()
-        imageView.bounds = cell.bounds
+        let imageView = UIImageView(frame: cell.bounds)
         let activityIndicator = UIActivityIndicatorView(frame: collectionView.bounds)
         activityIndicator.hidesWhenStopped = true
         collectionView.addSubview(activityIndicator)
@@ -83,7 +82,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
                     DispatchQueue.main.async {
                         try? self.dataController.backgroundContext.save()
                         imageView.image = UIImage(data: data)
-                        cell.addSubview(imageView)
+                        cell.contentView.addSubview(imageView)
                         self.startAnimating(activityIndicator, false)
                         
                     }
@@ -94,7 +93,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
                 DispatchQueue.main.async {
                     activityIndicator.startAnimating()
                     imageView.image = UIImage(data: data)
-                    cell.addSubview(imageView)
+                    cell.contentView.addSubview(imageView)
                 }
             }
         }
