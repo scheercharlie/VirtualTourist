@@ -17,14 +17,15 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     var mapAnnotation: VirtualTouristMapAnnotation!
     var dataController: DataController!
     var vc: PhotoAlbumViewController!
-    
     var fetchResultsController: NSFetchedResultsController<Photo>!
+    var collectionView: UICollectionView!
     
-    init(flowLayout: UICollectionViewFlowLayout, mapAnnotation: VirtualTouristMapAnnotation, fetchRequest: NSFetchRequest<Photo>, dataController: DataController, viewController: PhotoAlbumViewController) {
+    init(flowLayout: UICollectionViewFlowLayout, mapAnnotation: VirtualTouristMapAnnotation, fetchRequest: NSFetchRequest<Photo>, dataController: DataController, viewController: PhotoAlbumViewController, collectionView: UICollectionView) {
         self.flowLayout = flowLayout
         self.mapAnnotation = mapAnnotation
         self.dataController = dataController
         self.vc = viewController
+        self.collectionView = collectionView
         
         self.fetchResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: "photos")
         
@@ -114,6 +115,33 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("tapped")
+        let object = fetchResultsController.object(at: indexPath)
+        dataController.viewContext.delete(object)
+        
+        do {
+            try dataController.viewContext.save()
+        } catch {
+            print(error)
+        }
+    }
+//    
+//    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+//        
+//    }
+//
+//    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+//        
+//    }
+//    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            collectionView.insertItems(at: [newIndexPath!])
+        case .delete:
+            collectionView.deleteItems(at: [indexPath!])
+        default:
+            break
+        }
     }
     
     
