@@ -121,33 +121,30 @@ class FlickrAPIClient {
         }
     }
     
-    private static func saveImageDataToContextFrom(url: URL, dataController: DataController) {
+    static func fetchImageDataFor(_ photo: Photo, dataController: DataController, completion: @escaping (Data?, Error?) -> Void) {
+        guard let url = photo.url else {
+            print("No valid url found")
+            DispatchQueue.main.async {
+                completion(nil, nil)
+            }
+            return
+        }
         let dataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard error == nil, let data = data else {
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
                 return
             }
             
-            let photo = Photo.init(context: dataController.backgroundContext)
             photo.photoData = data
+            completion(data, nil)
+
         }
         dataTask.resume()
     }
-    
-    static func getImageFromSavedImageData(photoObject: Photo) -> UIImage? {
-        var image = UIImage()
-        
-        guard let data = photoObject.photoData else {
-            print("No photo data found")
-            return nil
-        }
-        if let photo = UIImage(data: data) {
-            image = photo
-        } else {
-            print("Could not convert image")
-        }
-        
-        return image
-    }
+
+
 }
 
 

@@ -67,30 +67,60 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        //Make collection view cell
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as? CollectionViewCell else {
             return UICollectionViewCell()
         }
 
+        //Set background placeholder for Cell
+        //Create image view
+        //Get photo to set image
         cell.backgroundColor = UIColor.lightGray
         let imageView = UIImageView(frame: cell.bounds)
+        let photo = fetchResultsController.object(at: indexPath)
+        
+        //Prepare activity indicator and start animating
         let activityIndicator = UIActivityIndicatorView(frame: collectionView.bounds)
         activityIndicator.hidesWhenStopped = true
         collectionView.addSubview(activityIndicator)
-        
-        
         startAnimating(activityIndicator, true)
-        
 
-        let photo = fetchResultsController.object(at: indexPath)
-        if let photourl = photo.url {
-            displayPhotoFor(photo, photourl, imageView, cell, activityIndicator)
+        //If the photo does not have data saved
+        //Use the Flickr api to fetch data for the image and save it
+        //Convert downloaded data to image and display in cell
+        if photo.photoData == nil {
+            DispatchQueue.global().async {
+                
+                
+                FlickrAPIClient.fetchImageDataFor(photo, dataController: self.dataController, completion: { (data, error) in
+                    if let data = data {
+                        self.setImageForCellFromImageData(data, imageView: imageView, activityIndicator: activityIndicator, cell: cell)
+                    }
+                })
+            }
+        //If photo has image data already, convert data to image and display it
         } else {
-            
+            setImageForCellFromImageData(photo.photoData!, imageView: imageView, activityIndicator: activityIndicator, cell: cell)
         }
+        
+        do {
+            try dataController.backgroundContext.save()
+        } catch {
+            print("Could not save")
+        }
+
         return cell
     }
     
-    func startAnimating(_ activityIndicator: UIActivityIndicatorView, _ bool: Bool) {
+    fileprivate func setImageForCellFromImageData(_ data: Data, imageView: UIImageView, activityIndicator: UIActivityIndicatorView, cell: CollectionViewCell) {
+        DispatchQueue.main.async {
+            imageView.image = UIImage(data: data)
+            cell.contentView.addSubview(imageView)
+            self.startAnimating(activityIndicator, false)
+        }
+    }
+    
+    fileprivate func startAnimating(_ activityIndicator: UIActivityIndicatorView, _ bool: Bool) {
         if bool {
             activityIndicator.startAnimating()
             vc.reloadButton.isEnabled = false
@@ -103,14 +133,14 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("tapped")
-        let object = fetchResultsController.object(at: indexPath)
-        dataController.viewContext.delete(object)
-        
-        do {
-            try dataController.viewContext.save()
-        } catch {
-            print(error)
-        }
+//        let object = fetchResultsController.object(at: indexPath)
+//        dataController.viewContext.delete(object)
+//
+//        do {
+//            try dataController.viewContext.save()
+//        } catch {
+//            print(error)
+//        }
     }
     
     /*CollectionViewCell Spacing code found at https://medium.com/@NickBabo/equally-spaced-uicollectionview-cells-6e60ce8d457b
@@ -125,31 +155,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         //TO DO Fix the spacing to automatically size
         let width = (collectionView.bounds.width - totalSpacing) / numberOfItemsPerRow
         return CGSize(width: 100, height: 100)
-    }
-    
-    
-    fileprivate func displayPhotoFor(_ photo: Photo, _ photourl: URL, _ imageView: UIImageView, _ cell: CollectionViewCell, _ activityIndicator: UIActivityIndicatorView) {
-        if photo.photoData == nil {
-            DispatchQueue.global().async {
-                if let data = try? Data(contentsOf: photourl) {
-                    DispatchQueue.main.async {
-                        try? self.dataController.backgroundContext.save()
-                        imageView.image = UIImage(data: data)
-                        cell.contentView.addSubview(imageView)
-                        self.startAnimating(activityIndicator, false)
-                        
-                    }
-                }
-            }
-        } else {
-            if let data = photo.photoData {
-                DispatchQueue.main.async {
-                    activityIndicator.startAnimating()
-                    imageView.image = UIImage(data: data)
-                    cell.contentView.addSubview(imageView)
-                }
-            }
-        }
     }
     
 
