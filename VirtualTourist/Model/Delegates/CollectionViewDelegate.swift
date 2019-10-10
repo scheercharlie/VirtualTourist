@@ -11,15 +11,19 @@ import UIKit
 import CoreData
 
 class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, NSFetchedResultsControllerDelegate {
-    var flowLayout: UICollectionViewFlowLayout!
-    private let spacing: CGFloat = 5
     
+    //MARK: Properties
+    var flowLayout: UICollectionViewFlowLayout!
     var mapAnnotation: VirtualTouristMapAnnotation!
     var dataController: DataController!
     var vc: PhotoAlbumViewController!
     var fetchResultsController: NSFetchedResultsController<Photo>!
     var collectionView: UICollectionView!
     
+    private let spacing: CGFloat = 5
+    
+    
+    //MARK: Initilization
     init(flowLayout: UICollectionViewFlowLayout, mapAnnotation: VirtualTouristMapAnnotation, fetchRequest: NSFetchRequest<Photo>, dataController: DataController, viewController: PhotoAlbumViewController, collectionView: UICollectionView) {
         self.flowLayout = flowLayout
         self.mapAnnotation = mapAnnotation
@@ -40,6 +44,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         }
     }
     
+    //Setup the collection view flow preferences
     func setupFlowLayoutPreferences() {
         flowLayout.sectionInset = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
         flowLayout.minimumInteritemSpacing = 10
@@ -49,7 +54,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     }
     
     
-    
+    //MARK: Collection View Data Source Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if fetchResultsController != nil, let sections = fetchResultsController.sections {
@@ -59,30 +64,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             return 10
         }
         
-    }
-    
-    fileprivate func displayPhotoFor(_ photo: Photo, _ photourl: URL, _ imageView: UIImageView, _ cell: CollectionViewCell, _ activityIndicator: UIActivityIndicatorView) {
-        if photo.photoData == nil {
-            DispatchQueue.global().async {
-                if let data = try? Data(contentsOf: photourl) {
-                    DispatchQueue.main.async {
-                        try? self.dataController.backgroundContext.save()
-                        imageView.image = UIImage(data: data)
-                        cell.contentView.addSubview(imageView)
-                        self.startAnimating(activityIndicator, false)
-                        
-                    }
-                }
-            }
-        } else {
-            if let data = photo.photoData {
-                DispatchQueue.main.async {
-                    activityIndicator.startAnimating()
-                    imageView.image = UIImage(data: data)
-                    cell.contentView.addSubview(imageView)
-                }
-            }
-        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -131,6 +112,48 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             print(error)
         }
     }
+    
+    /*CollectionViewCell Spacing code found at https://medium.com/@NickBabo/equally-spaced-uicollectionview-cells-6e60ce8d457b
+     Author:Nicholas Babo
+     Article: Equally Spaced UICollectionView Cells
+     Site: Medium*/
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let numberOfItemsPerRow: CGFloat = 3
+        let spacingBetweenItems: CGFloat = 5
+        let totalSpacing = (2 * self.spacing) + ((numberOfItemsPerRow - 1) * spacingBetweenItems)
+        //TO DO Fix the spacing to automatically size
+        let width = (collectionView.bounds.width - totalSpacing) / numberOfItemsPerRow
+        return CGSize(width: 100, height: 100)
+    }
+    
+    
+    fileprivate func displayPhotoFor(_ photo: Photo, _ photourl: URL, _ imageView: UIImageView, _ cell: CollectionViewCell, _ activityIndicator: UIActivityIndicatorView) {
+        if photo.photoData == nil {
+            DispatchQueue.global().async {
+                if let data = try? Data(contentsOf: photourl) {
+                    DispatchQueue.main.async {
+                        try? self.dataController.backgroundContext.save()
+                        imageView.image = UIImage(data: data)
+                        cell.contentView.addSubview(imageView)
+                        self.startAnimating(activityIndicator, false)
+                        
+                    }
+                }
+            }
+        } else {
+            if let data = photo.photoData {
+                DispatchQueue.main.async {
+                    activityIndicator.startAnimating()
+                    imageView.image = UIImage(data: data)
+                    cell.contentView.addSubview(imageView)
+                }
+            }
+        }
+    }
+    
+
+    //MARK: Fetched Results Controller Delegate Methods
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
@@ -143,20 +166,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         }
     }
     
-    
-    /*CollectionViewCell Spacing code found at https://medium.com/@NickBabo/equally-spaced-uicollectionview-cells-6e60ce8d457b
-     Author:Nicholas Babo
-     Article: Equally Spaced UICollectionView Cells
-     Site: Medium*/
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        let numberOfItemsPerRow: CGFloat = 3
-        let spacingBetweenItems: CGFloat = 5
-        let totalSpacing = (2 * self.spacing) + ((numberOfItemsPerRow - 1) * spacingBetweenItems)
-        
-        let width = (collectionView.bounds.width - totalSpacing) / numberOfItemsPerRow
-        return CGSize(width: 100, height: 100)
-    }
     
     func removeAllVisibleCells(cells: [UICollectionViewCell]) {
         for index in 0...cells.count {
