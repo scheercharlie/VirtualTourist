@@ -133,14 +133,15 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("tapped")
-//        let object = fetchResultsController.object(at: indexPath)
-//        dataController.viewContext.delete(object)
-//
-//        do {
-//            try dataController.viewContext.save()
-//        } catch {
-//            print(error)
-//        }
+        let object = fetchResultsController.object(at: indexPath)
+        dataController.viewContext.delete(object)
+        print("item selected")
+
+        do {
+            try dataController.viewContext.save()
+        } catch {
+            print(error)
+        }
     }
     
     /*CollectionViewCell Spacing code found at https://medium.com/@NickBabo/equally-spaced-uicollectionview-cells-6e60ce8d457b
@@ -162,8 +163,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
-        case .insert:
-            collectionView.insertItems(at: [newIndexPath!])
         case .delete:
             collectionView.deleteItems(at: [indexPath!])
         default:
