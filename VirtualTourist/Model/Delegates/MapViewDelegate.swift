@@ -18,17 +18,13 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
     init(viewController: UIViewController, fetchRequest: NSFetchRequest<Pin>?, managedObjectContext: NSManagedObjectContext?) {
         self.viewController = viewController
         
+        //Check and see if there is a fetch request and managed object context
+        //If there is, setup the fetched results controller
         if let fetchRequest = fetchRequest, let managedObjectContext = managedObjectContext {
             needsFetch = true
             fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
-            
-            //TO DO: Do a better job of handling the fetch errors
-            do {
-                try fetchedResultsController.performFetch()
-            } catch {
-                print(error.localizedDescription)
-            }
         } else {
+            //If there isn't set needs fetch to false.
             needsFetch = false
         }
     }
@@ -73,8 +69,14 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
         //If there is a fetched results controller:
         //Create an array for all of the saved pins and display them
         if needsFetch {
+            //Try to fetch pins from storage
+            do {
+                try fetchedResultsController.performFetch()
+            } catch {
+                viewController.presentNoActionAlert(title: "Could not fetch Pins", message: "Please try again later")
+            }
+            
             guard let fetchedPins = fetchedResultsController.fetchedObjects else {
-                print("no results controller")
                 return
             }
             var annotations: [VirtualTouristMapAnnotation] = []
