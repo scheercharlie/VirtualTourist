@@ -47,11 +47,22 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         //Save new location to UserDefaults
         let currentMapLocation = MapLocation.init(coordinate: mapView.centerCoordinate, span: mapView.region.span)
         currentMapLocation.saveMapViewLocationToUserDefaults()
-        print("saved mapview location")
+        
+        //If there are changes to the context, save to core data
+        if dataController.viewContext.hasChanges {
+            DispatchQueue.global().async {
+                do {
+                    try self.dataController.viewContext.save()
+                } catch {
+                    print("Could not save new Photo")
+                }
+            }
+        }
     }
     
     //MARK: Gesture Recognizer Functions
     func setupGestureRecognizer() {
+        //Create and add long press gesture recognizer
         let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         gestureRecognizer.minimumPressDuration = 1.0
         gestureRecognizer.delaysTouchesBegan = true
@@ -61,14 +72,19 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
     }
     
     @objc func handleLongPress(gestureRecognizer : UILongPressGestureRecognizer) {
+        //Only trigger the long press if the gesture recognizer is in state Begin
         if gestureRecognizer.state == .began {
+            //Get location from the mapView and convert it to a 2d Coordinate
             let location = gestureRecognizer.location(in: mapView)
             let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
             
+            //Create a new pin and set it's coordinate
+            //Add the pin to the mapview
             let point = VirtualTouristMapAnnotation()
             point.coordinate = coordinate
             mapView.addAnnotation(point)
             
+            //Create a managed object Pin
             createPinFromMapAnnotation(mapAnnotation: point, coordinate: coordinate)
             
         }
@@ -106,9 +122,7 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
                                         name: mapAnnotation.title ?? mapAnnotation.returnCoordinateAsName(),
                                         managedObjectContext: self.dataController.viewContext)
                 
-                self.savePinToStorage(mapAnnotation.pin)
-                
-                
+                //Fetch and save Image URLS for the newly created Pin
                 FlickrAPIClient.fetchImageURLS(mapAnnotation: mapAnnotation, dataController: self.dataController) { (success, error) in
                     if success {
                         print("should have saved data")
@@ -122,21 +136,9 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
         }
     }
     
-    //MARK: Active Functions
-    func savePinToStorage(_ pin : Pin) {
-        do {
-            try dataController.viewContext.save()
-            print("Save Successful")
-        } catch {
-            print("could not save pin")
-            presentNoActionAlert(title:"Save Failed", message:"Could not save the pin location, try again")
-        }
-    }
-    
-    
     //MARK: Navigation Methods
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        print("segue prepared")
+        //Pass data controller into Photo Album View Controller and present VC
         let destination = segue.destination as! PhotoAlbumViewController
         destination.mapAnnotation = mapView.selectedAnnotations[0] as? VirtualTouristMapAnnotation
         destination.dataController = dataController

@@ -87,12 +87,7 @@ class FlickrAPIClient {
                    let newPhoto = Photo(context: dataController.viewContext)
                     newPhoto.url = url
                     newPhoto.pin = mapAnnotation.pin
-                    
-                    do {
-                        try dataController.viewContext.save()
-                    } catch {
-                        print("Could not save new Photo")
-                    }
+
                 }
             }
             DispatchQueue.main.async {
