@@ -46,7 +46,18 @@ class PhotoAlbumViewController: UIViewController {
         if let mapAnnotation = mapAnnotation {
             self.title = mapAnnotation.pin.name
         }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         
+        //Save changes to background context
+        do {
+            try dataController.backgroundContext.save()
+        } catch {
+            print("Could not save")
+        }
+
     }
     
     fileprivate func setupCollectionView(_ fetchRequest: NSFetchRequest<Photo>) {
@@ -76,6 +87,7 @@ class PhotoAlbumViewController: UIViewController {
         }
     }
     
+    //MARK: Active Functions
     //Deleted the visible ceels
     @IBAction func reloadWasTapped(_ sender: Any) {
         collectionViewDelegate.removeAllVisibleCells()

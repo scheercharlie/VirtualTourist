@@ -33,6 +33,8 @@ class FlickrAPIClient {
         }
     }
     
+    //MARK: API Get requests
+    //Generic Get request
     private class func taskForGetRequest<ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, completion: @escaping (Bool, ResponseType?, Error?) -> Void) {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -72,6 +74,8 @@ class FlickrAPIClient {
         task.resume()
     }
     
+    //Get URLS from the Flickr API
+    //For the returned images, create photo entities and add urls to them
     static func fetchImageURLS(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, completion: @escaping (Bool, Error?) -> Void) {
         FlickrAPIClient.preformImageLocationSearch(from: mapAnnotation) { (success, response, error) in
             guard error == nil, let flickPhotoRepsonse = response else {
@@ -96,7 +100,7 @@ class FlickrAPIClient {
         }
     }
     
-    //TO DO: add an error for the api returning no images
+    //Get URLS from the Flickr API
     static private func preformImageLocationSearch(from mapAnnotation: VirtualTouristMapAnnotation, completion: @escaping (Bool, FlickrAPIPhotosSearchResonse?, Error?) -> Void) {
         let latitude = mapAnnotation.pin.latitude
         let longitude = mapAnnotation.pin.longitude
@@ -116,6 +120,8 @@ class FlickrAPIClient {
         }
     }
     
+    //MARK: Image management Functions
+    //Fetch image data for the URLS saved in a photo entity
     static func fetchImageDataFor(_ photo: Photo, dataController: DataController, completion: @escaping (Data?, Error?) -> Void) {
         guard let url = photo.url else {
             print("No valid url found")

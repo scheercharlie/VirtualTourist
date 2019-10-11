@@ -90,25 +90,18 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         //Convert downloaded data to image and display in cell
         if photo.photoData == nil {
             DispatchQueue.global().async {
-                
-                
                 FlickrAPIClient.fetchImageDataFor(photo, dataController: self.dataController, completion: { (data, error) in
                     if let data = data {
                         self.setImageForCellFromImageData(data, imageView: imageView, activityIndicator: activityIndicator, cell: cell)
                     }
                 })
             }
+            
         //If photo has image data already, convert data to image and display it
         } else {
             setImageForCellFromImageData(photo.photoData!, imageView: imageView, activityIndicator: activityIndicator, cell: cell)
         }
-        
-        do {
-            try dataController.backgroundContext.save()
-        } catch {
-            print("Could not save")
-        }
-
+    
         return cell
     }
     
