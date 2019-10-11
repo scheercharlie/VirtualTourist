@@ -171,8 +171,9 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     }
     
     
-    func removeAllVisibleCells(cells: [UICollectionViewCell]) {
-        for index in 0...cells.count {
+    func removeAllVisibleCells() {
+        let visibleCells = collectionView.visibleCells
+        for index in 0...visibleCells.count {
             let object = fetchResultsController.object(at: IndexPath(item: index, section: 0))
             dataController.viewContext.delete(object)
             if dataController.viewContext.hasChanges {

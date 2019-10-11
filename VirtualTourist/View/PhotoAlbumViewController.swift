@@ -27,33 +27,42 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //Create fetch request
         let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "objectID", ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "pin == %@", mapAnnotation!.pin)
-
         
+        //Setup collection view
+        setupCollectionView(fetchRequest)
+        
+        //Setup map view
+        setupMapView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        //Present the location title as the view title
+        //TO DO I don't think this works....
+        super.viewDidAppear(animated)
+        if let mapAnnotation = mapAnnotation {
+            self.title = mapAnnotation.pin.name
+        }
+        
+    }
+    
+    fileprivate func setupCollectionView(_ fetchRequest: NSFetchRequest<Photo>) {
+        //Create collection view delegate
         collectionViewDelegate = CollectionViewDelegate(flowLayout: flowLayout, mapAnnotation: mapAnnotation!, fetchRequest: fetchRequest, dataController: dataController, viewController: self, collectionView: collectionView)
         collectionViewDelegate.mapAnnotation = mapAnnotation
         
         collectionView.delegate = collectionViewDelegate
         collectionView.dataSource = collectionViewDelegate
         collectionView.collectionViewLayout = flowLayout
-        
-        
-        
-        setupMapView()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if let mapAnnotation = mapAnnotation {
-            self.title = mapAnnotation.pin.name
-
-        }
-        
-    }
     
     fileprivate func setupMapView() {
+        //Setup map view using mapAnnotation
+        //Set may as not interaction enabled
         mapViewDelegate = MapViewDelegate(viewController: self, fetchRequest: nil, managedObjectContext: nil)
         mapView.delegate = mapViewDelegate
         if let pin = mapAnnotation {
@@ -67,12 +76,9 @@ class PhotoAlbumViewController: UIViewController {
         }
     }
     
+    //Deleted the visible ceels
     @IBAction func reloadWasTapped(_ sender: Any) {
-        let cells = collectionView.visibleCells
-        print(cells.count)
-        
-        collectionViewDelegate.removeAllVisibleCells(cells: cells)
-        
+        collectionViewDelegate.removeAllVisibleCells()
     }
 }
 
