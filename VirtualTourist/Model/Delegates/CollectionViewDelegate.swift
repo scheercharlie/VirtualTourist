@@ -19,6 +19,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     var vc: PhotoAlbumViewController!
     var fetchResultsController: NSFetchedResultsController<Photo>!
     var collectionView: UICollectionView!
+    var activityIndicator: UIActivityIndicatorView!
     
     private let spacing: CGFloat = 5
     
@@ -79,10 +80,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         let photo = fetchResultsController.object(at: indexPath)
         
         //Prepare activity indicator and start animating
-        let activityIndicator = UIActivityIndicatorView(frame: collectionView.bounds)
-        activityIndicator.hidesWhenStopped = true
-        collectionView.addSubview(activityIndicator)
-        startAnimating(activityIndicator, true)
+        vc.startAnimating(true)
 
         //If the photo does not have data saved
         //Use the Flickr api to fetch data for the image and save it
@@ -91,8 +89,8 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             DispatchQueue.global().async {
                 FlickrAPIClient.fetchImageDataFor(photo, dataController: self.dataController, completion: {[weak self] (data, error) in
                     if let data = data {
-                        print("getting data")
-                        self!.setImageForCellFromImageData(data, imageView: cell.imageView, activityIndicator: activityIndicator, cell: cell)
+                        self!.setImageForCellFromImageData(data, imageView: cell.imageView, cell: cell)
+                        
                     }
                 })
             }
@@ -100,20 +98,21 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         //If photo has image data already, convert data to image and display it
         } else {
             setImageForCellFromImageData(photo.photoData!, imageView:
-                cell.imageView, activityIndicator: activityIndicator, cell: cell)
-            print("had saved data")
+                cell.imageView, cell: cell)
+            
         }
-    
+        
+        vc.startAnimating(false)
         return cell
     }
     
-    fileprivate func setImageForCellFromImageData(_ data: Data, imageView: UIImageView, activityIndicator: UIActivityIndicatorView, cell: CollectionViewCell) {
+    fileprivate func setImageForCellFromImageData(_ data: Data, imageView: UIImageView, cell: CollectionViewCell) {
         DispatchQueue.main.async {
             if let image = UIImage(data: data) {
                 cell.imageView.image = image
             }
             
-            self.startAnimating(activityIndicator, false)
+            self.vc.startAnimating(false)
         }
     }
     

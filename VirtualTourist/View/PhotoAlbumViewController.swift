@@ -22,6 +22,8 @@ class PhotoAlbumViewController: UIViewController {
     var mapViewDelegate: MapViewDelegate!
     var dataController: DataController!
     var collectionViewDelegate: CollectionViewDelegate!
+    var activityIndicator: UIActivityIndicatorView!
+    var overlay: UIView!
     
     //MARK: View life cycle Methods
     override func viewDidLoad() {
@@ -37,6 +39,8 @@ class PhotoAlbumViewController: UIViewController {
         
         //Setup map view
         setupMapView()
+        
+        setupActivityView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -83,6 +87,35 @@ class PhotoAlbumViewController: UIViewController {
             mapView.addAnnotation(pin)
             
             mapView.isUserInteractionEnabled = false
+            
+        }
+    }
+    
+    fileprivate func setupActivityView() {
+        activityIndicator = UIActivityIndicatorView()
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.center = view.center
+        activityIndicator.color = .white
+        overlay = UIView()
+        overlay.bounds = view.bounds
+        overlay.center = view.center
+        overlay.backgroundColor = UIColor(white: 0.1, alpha: 0.5)
+        self.view.addSubview(overlay)
+        self.view.addSubview(activityIndicator)
+        collectionView.isUserInteractionEnabled = false
+    }
+    
+    func startAnimating(_ bool: Bool) {
+        if bool {
+            activityIndicator.startAnimating()
+            overlay.isHidden = false
+            reloadButton.isEnabled = false
+            collectionView.isUserInteractionEnabled = false
+        } else {
+            activityIndicator.stopAnimating()
+            reloadButton.isEnabled = true
+            overlay.isHidden = true
+            collectionView.isUserInteractionEnabled = true
             
         }
     }
