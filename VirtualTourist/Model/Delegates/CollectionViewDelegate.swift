@@ -76,7 +76,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         //Create image view
         //Get photo to set image
         cell.backgroundColor = UIColor.lightGray
-        let imageView = UIImageView(frame: cell.bounds)
         let photo = fetchResultsController.object(at: indexPath)
         
         //Prepare activity indicator and start animating
@@ -90,16 +89,19 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         //Convert downloaded data to image and display in cell
         if photo.photoData == nil {
             DispatchQueue.global().async {
-                FlickrAPIClient.fetchImageDataFor(photo, dataController: self.dataController, completion: { (data, error) in
+                FlickrAPIClient.fetchImageDataFor(photo, dataController: self.dataController, completion: {[weak self] (data, error) in
                     if let data = data {
-                        self.setImageForCellFromImageData(data, imageView: imageView, activityIndicator: activityIndicator, cell: cell)
+                        print("getting data")
+                        self!.setImageForCellFromImageData(data, imageView: cell.imageView, activityIndicator: activityIndicator, cell: cell)
                     }
                 })
             }
             
         //If photo has image data already, convert data to image and display it
         } else {
-            setImageForCellFromImageData(photo.photoData!, imageView: imageView, activityIndicator: activityIndicator, cell: cell)
+            setImageForCellFromImageData(photo.photoData!, imageView:
+                cell.imageView, activityIndicator: activityIndicator, cell: cell)
+            print("had saved data")
         }
     
         return cell
@@ -107,8 +109,10 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     
     fileprivate func setImageForCellFromImageData(_ data: Data, imageView: UIImageView, activityIndicator: UIActivityIndicatorView, cell: CollectionViewCell) {
         DispatchQueue.main.async {
-            imageView.image = UIImage(data: data)
-            cell.contentView.addSubview(imageView)
+            if let image = UIImage(data: data) {
+                cell.imageView.image = image
+            }
+            
             self.startAnimating(activityIndicator, false)
         }
     }

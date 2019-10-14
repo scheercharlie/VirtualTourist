@@ -10,5 +10,11 @@ import Foundation
 import UIKit
 
 class CollectionViewCell: UICollectionViewCell {
-    
+    var imageView: UIImageView!
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        imageView = UIImageView(frame: self.bounds)
+        contentView.addSubview(imageView)
+    }
 }

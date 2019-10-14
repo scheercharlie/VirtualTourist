@@ -114,16 +114,16 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
     func createPinFromMapAnnotation(mapAnnotation: VirtualTouristMapAnnotation, coordinate: CLLocationCoordinate2D) {
         //Try to get a name for the a place given a location
         //If successful set the point's title to the location name
-        getLocationtitle(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)) { (name, error) in
+        getLocationtitle(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)) { [weak self] (name, error) in
             if let locationName = name {
                 mapAnnotation.title = locationName
                 
                 mapAnnotation.pin = Pin(fromCoordinate: coordinate,
                                         name: mapAnnotation.title ?? mapAnnotation.returnCoordinateAsName(),
-                                        managedObjectContext: self.dataController.viewContext)
+                                        managedObjectContext: self!.dataController.viewContext)
                 
                 //Fetch and save Image URLS for the newly created Pin
-                FlickrAPIClient.fetchImageURLS(mapAnnotation: mapAnnotation, dataController: self.dataController) { (success, error) in
+                FlickrAPIClient.fetchImageURLS(mapAnnotation: mapAnnotation, dataController: self!.dataController) { (success, error) in
                     if success {
                         print("should have saved data")
                     } else {
