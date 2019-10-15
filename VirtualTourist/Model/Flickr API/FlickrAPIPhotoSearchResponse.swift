@@ -14,7 +14,7 @@ struct FlickrAPIPhotosSearchResonse: Codable {
     let stat: String
 }
 
-struct PhotoResponse: Codable{
+struct PhotoResponse: Codable {
     let page: Int
     let pages: Int
     let perpage: Int

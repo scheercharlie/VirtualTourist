@@ -123,7 +123,7 @@ class PhotoAlbumViewController: UIViewController {
     //MARK: Active Functions
     //Deleted the visible ceels
     @IBAction func reloadWasTapped(_ sender: Any) {
-        collectionViewDelegate.removeAllVisibleCells()
+        collectionViewDelegate.removeCurrentImages()
     }
 }
 

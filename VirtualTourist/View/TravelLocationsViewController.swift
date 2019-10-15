@@ -85,7 +85,7 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
             mapView.addAnnotation(point)
             
             //Create a managed object Pin
-            createPinFromMapAnnotation(mapAnnotation: point, coordinate: coordinate)
+            createPinFromMapAnnotation(mapAnnotation: point, coordinate: coordinate, page: 1)
             
         }
     }
@@ -111,7 +111,7 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
     //Create a new VirtualTouristMKPointAnnotation from coordinate
     //Save new Pin to viewContext
     //Return new VirtualTouristMapAnnotation
-    func createPinFromMapAnnotation(mapAnnotation: VirtualTouristMapAnnotation, coordinate: CLLocationCoordinate2D) {
+    func createPinFromMapAnnotation(mapAnnotation: VirtualTouristMapAnnotation, coordinate: CLLocationCoordinate2D, page: Int) {
         //Try to get a name for the a place given a location
         //If successful set the point's title to the location name
         getLocationtitle(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)) { [weak self] (name, error) in
@@ -123,9 +123,9 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
                                         managedObjectContext: self!.dataController.viewContext)
                 
                 //Fetch and save Image URLS for the newly created Pin
-                FlickrAPIClient.fetchImageURLS(mapAnnotation: mapAnnotation, dataController: self!.dataController) { (success, error) in
+                FlickrAPIClient.fetchImageURLS(mapAnnotation: mapAnnotation, dataController: self!.dataController, page: page) { (success, error) in
                     if success {
-                        print("should have saved data")
+                        print("should have saved urls")
                     } else {
                         print("failed")
                     }

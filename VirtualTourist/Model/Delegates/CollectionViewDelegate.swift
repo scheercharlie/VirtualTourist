@@ -59,7 +59,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if fetchResultsController != nil, let sections = fetchResultsController.sections {
-            print(sections[section].numberOfObjects)
             return sections[section].numberOfObjects
         } else {
             return 10
@@ -99,7 +98,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         } else {
             setImageForCellFromImageData(photo.photoData!, imageView:
                 cell.imageView, cell: cell)
-            
         }
         
         vc.startAnimating(false)
@@ -159,26 +157,52 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
+        case .insert:
+            if let newIndexPath = newIndexPath {
+                collectionView.insertItems(at: [newIndexPath])
+                print("insert")
+            }
         case .delete:
-            collectionView.deleteItems(at: [indexPath!])
+            if let indexPath = indexPath {
+                collectionView.deleteItems(at: [indexPath])
+                print("delete")
+            }
         default:
             break
         }
     }
     
+    func removeCurrentImages() {
+        guard let imageArray = fetchResultsController.fetchedObjects else {
+                return
+        }
     
-    func removeAllVisibleCells() {
-        let visibleCells = collectionView.visibleCells
-        for index in 0...visibleCells.count {
-            let object = fetchResultsController.object(at: IndexPath(item: index, section: 0))
-            dataController.viewContext.delete(object)
-            if dataController.viewContext.hasChanges {
-                do {
-                    try dataController.viewContext.save()
-                } catch {
-                    print("couldn't save")
-                }
+        let page = Int(imageArray.first!.page)
+    
+        for image in imageArray {
+            dataController.viewContext.delete(image)
+            
+            do {
+                try dataController.viewContext.save()
+                print("saved")
+            } catch {
+                print("couldn't save")
             }
+            
+        }
+        
+        fetchNewImages(page: page)
+    }
+    
+    func fetchNewImages(page: Int) {
+        let newPage = page + 1
+        FlickrAPIClient.fetchImageURLS(mapAnnotation: mapAnnotation, dataController: dataController, page: newPage) { (success, error) in
+            if success {
+                print("should have new photo urls")
+            } else {
+                print("failed")
+            }
+            print("end of fetch new images")
         }
     }
 }
