@@ -101,12 +101,12 @@ class FlickrAPIClient {
                         newPhoto.url = url
                         newPhoto.page = Int16(page)
                         newPhoto.pin = mapAnnotation.pin
-                        print("added photo")
+
                         
                         if dataController.viewContext.hasChanges {
                             do {
                                 try dataController.viewContext.save()
-                                print("saved")
+                                
                             } catch {
                                 print("couldn't save")
                             }

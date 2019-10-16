@@ -28,6 +28,7 @@
 		BAECE84B234253E2001989ED /* UIViewController+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAECE84A234253E2001989ED /* UIViewController+Helpers.swift */; };
 		BAECE84D234258AC001989ED /* MapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAECE84C234258AC001989ED /* MapViewDelegate.swift */; };
 		BAECE84F23426389001989ED /* Pin+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAECE84E23426389001989ED /* Pin+Helpers.swift */; };
+		BAF0361223555E8600CC89C4 /* collectionView+helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF0361123555E8600CC89C4 /* collectionView+helpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		BAECE84A234253E2001989ED /* UIViewController+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Helpers.swift"; sourceTree = "<group>"; };
 		BAECE84C234258AC001989ED /* MapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewDelegate.swift; sourceTree = "<group>"; };
 		BAECE84E23426389001989ED /* Pin+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Pin+Helpers.swift"; sourceTree = "<group>"; };
+		BAF0361123555E8600CC89C4 /* collectionView+helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "collectionView+helpers.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +128,7 @@
 				BA4C51AD234061D40024188C /* TravelLocationsViewController.swift */,
 				BAECE84423423176001989ED /* PhotoAlbumViewController.swift */,
 				BAECE84A234253E2001989ED /* UIViewController+Helpers.swift */,
+				BAF0361123555E8600CC89C4 /* collectionView+helpers.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -242,6 +245,7 @@
 			files = (
 				BA1F7B3723459C1600ACCD41 /* VirtualTouristMapAnnotation.swift in Sources */,
 				BA4C516A2340583C0024188C /* AppDelegate.swift in Sources */,
+				BAF0361223555E8600CC89C4 /* collectionView+helpers.swift in Sources */,
 				BA3BC33C2347E802008C6320 /* FlickrAPIClient.swift in Sources */,
 				BAECE84523423176001989ED /* PhotoAlbumViewController.swift in Sources */,
 				BA4C516C2340583C0024188C /* SceneDelegate.swift in Sources */,
