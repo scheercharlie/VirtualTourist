@@ -72,36 +72,34 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             return UICollectionViewCell()
         }
 
-        print("cell for index path")
         //Set background placeholder for Cell
         //Create image view
         //Get photo to set image
         cell.backgroundColor = UIColor.lightGray
-    
-//        let photo = fetchResultsController.object(at: indexPath)
-//
-//        //Prepare activity indicator and start animating
-//        vc.startAnimating(true)
-//
-//        //If the photo does not have data saved
-//        //Use the Flickr api to fetch data for the image and save it
-//        //Convert downloaded data to image and display in cell
-//        if photo.photoData == nil {
-//            DispatchQueue.global().async {
-//                FlickrAPIClient.fetchImageDataFor(photo, dataController: self.dataController, completion: {[weak self] (data, error) in
-//                    if let data = data {
-//                        self!.setImageForCellFromImageData(data, imageView: cell.imageView, cell: cell)
-//
-//                    }
-//                })
-//            }
-//
-//        //If photo has image data already, convert data to image and display it
-//        } else {
-//            setImageForCellFromImageData(photo.photoData!, imageView:
-//                cell.imageView, cell: cell)
-//        }
-//
+        let photo = fetchResultsController.object(at: indexPath)
+        
+        //Prepare activity indicator and start animating
+        vc.startAnimating(true)
+
+        //If the photo does not have data saved
+        //Use the Flickr api to fetch data for the image and save it
+        //Convert downloaded data to image and display in cell
+        if photo.photoData == nil {
+            DispatchQueue.global().async {
+                FlickrAPIClient.fetchImageDataFor(photo, dataController: self.dataController, completion: {[weak self] (data, error) in
+                    if let data = data {
+                        self!.setImageForCellFromImageData(data, imageView: cell.imageView, cell: cell)
+                        
+                    }
+                })
+            }
+            
+        //If photo has image data already, convert data to image and display it
+        } else {
+            setImageForCellFromImageData(photo.photoData!, imageView:
+                cell.imageView, cell: cell)
+        }
+        
         vc.startAnimating(false)
         return cell
     }
@@ -115,7 +113,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             self.vc.startAnimating(false)
         }
     }
-
+    
     fileprivate func startAnimating(_ activityIndicator: UIActivityIndicatorView, _ bool: Bool) {
         if bool {
             activityIndicator.startAnimating()
@@ -131,6 +129,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         print("tapped")
         let object = fetchResultsController.object(at: indexPath)
         dataController.viewContext.delete(object)
+        print("item selected")
 
         do {
             try dataController.viewContext.save()
@@ -154,53 +153,32 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     }
     
 
-    
-    
-    
     //MARK: Fetched Results Controller Delegate Methods
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        print("fetched results did change")
         switch type {
         case .insert:
             if let newIndexPath = newIndexPath {
-                print("insert")
                 collectionView.insertItems(at: [newIndexPath])
+                print("insert")
             }
         case .delete:
             if let indexPath = indexPath {
+                collectionView.deleteItems(at: [indexPath])
                 print("delete")
-//                collectionView.deleteItems(at: [indexPath])
             }
         default:
             break
         }
     }
     
-    func returnCurrentPage() -> Int? {
-        guard let imageArray = fetchResultsController.fetchedObjects, let first = imageArray.first else {
-            print("no first item")
-            return nil
-        }
-        
-        let page = Int(first.page)
-        return page
-    }
-    
-    func removeCurrentImages(){
+    func removeCurrentImages() {
         guard let imageArray = fetchResultsController.fetchedObjects else {
                 return
         }
-        
-        print(imageArray.count)
-        var indexArray: [IndexPath] = []
-        for image in imageArray {
-            if let index = fetchResultsController.indexPath(forObject: image) {
-                indexArray.append(index)
-            }
-        }
     
-        print(indexArray)
+        let page = Int(imageArray.first!.page)
+    
         for image in imageArray {
             dataController.viewContext.delete(image)
             
@@ -212,20 +190,19 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             }
             
         }
-        collectionView.deleteItems(at: indexArray)
         
+        fetchNewImages(page: page)
     }
     
     func fetchNewImages(page: Int) {
         let newPage = page + 1
         FlickrAPIClient.fetchImageURLS(mapAnnotation: mapAnnotation, dataController: dataController, page: newPage) { (success, error) in
-            
             if success {
                 print("should have new photo urls")
             } else {
                 print("failed")
             }
-            
+            print("end of fetch new images")
         }
     }
 }

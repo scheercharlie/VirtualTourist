@@ -123,19 +123,7 @@ class PhotoAlbumViewController: UIViewController {
     //MARK: Active Functions
     //Deleted the visible ceels
     @IBAction func reloadWasTapped(_ sender: Any) {
-        print("reload was tapped")
-//        collectionViewDelegate.removeCurrentImages()
-        collectionView.performBatchUpdates({
-            guard let page = self.collectionViewDelegate.returnCurrentPage() else {
-                return
-            }
-            self.collectionViewDelegate.removeCurrentImages()
-            
-            
-            self.collectionViewDelegate.fetchNewImages(page: page)
-            
-            
-        }, completion: nil)
+        collectionViewDelegate.removeCurrentImages()
     }
 }
 
