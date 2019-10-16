@@ -123,8 +123,42 @@ class PhotoAlbumViewController: UIViewController {
     //MARK: Active Functions
     //Deleted the visible ceels
     @IBAction func reloadWasTapped(_ sender: Any) {
-        collectionViewDelegate.removeCurrentImages()
+        print("reload was tapped")
+
+        guard let page = collectionViewDelegate.returnCurrentPage() else {
+            return
+        }
+        
+        collectionView.performBatchUpdates({
+            
+            self.collectionViewDelegate.removeCurrentImages()
+            
+            
+            FlickrAPIClient.fetchImageURLS(mapAnnotation: self.mapAnnotation!, dataController: self.dataController, page: page) { (success, photos, error) in
+                if success {
+                    if let photos = photos {
+                        var indexes: [IndexPath] = []
+                        for photo in photos {
+                            if let index = self.collectionViewDelegate.fetchResultsController.indexPath(forObject: photo) {
+                                indexes.append(index)
+                            }
+                        }
+                        self.collectionView.insertItems(at: indexes)
+                    }
+
+                } else {
+                    print(error)
+                }
+            }
+            
+            
+        }, completion: { (complete) in
+            if complete {
+                print("complete")
+            }
+        })
     }
+    
 }
 
 

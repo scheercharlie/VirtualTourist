@@ -76,7 +76,7 @@ class FlickrAPIClient {
     
     //Get URLS from the Flickr API
     //For the returned images, create photo entities and add urls to them
-    static func fetchImageURLS(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, page: Int, completion: @escaping (Bool, Error?) -> Void) {
+    static func fetchImageURLS(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, page: Int, completion: @escaping (Bool, [Photo]?,  Error?) -> Void) {
         print("page in fetchimageurls \(page)")
         guard page != 0 else {
             //If this works add an alert to say no more images found
@@ -84,11 +84,13 @@ class FlickrAPIClient {
             return
         }
         
+        var photoArray: [Photo] = []
+        
         FlickrAPIClient.preformImageLocationSearch(from: mapAnnotation, page: page) { (success, response, error) in
             guard error == nil, let flickPhotoRepsonse = response else {
                 print("Could not fetch")
                 DispatchQueue.main.async {
-                    completion(false, error)
+                    completion(false, nil, error)
                 }
                 return
             }
@@ -103,6 +105,7 @@ class FlickrAPIClient {
                         newPhoto.pin = mapAnnotation.pin
                         print("added photo")
                         
+                        print("new photo")
                         if dataController.viewContext.hasChanges {
                             do {
                                 try dataController.viewContext.save()
@@ -115,8 +118,9 @@ class FlickrAPIClient {
                 }
             }
             DispatchQueue.main.async {
-                completion(true, nil)
+                completion(true, photoArray, nil)
             }
+            
         }
     }
     
@@ -143,26 +147,31 @@ class FlickrAPIClient {
     
     //MARK: Image management Functions
     //Fetch image data for the URLS saved in a photo entity
-    static func fetchImageDataFor(_ photo: Photo, dataController: DataController, completion: @escaping (Data?, Error?) -> Void) {
+    static func fetchImageDataFor(_ photo: Photo, dataController: DataController, completion: ((Data?, Error?) -> Void)? = nil) {
         
         guard let url = photo.url else {
             print("No valid url found")
             DispatchQueue.main.async {
-                completion(nil, nil)
+                if let completion = completion {
+                    completion(nil, nil)
+                }
             }
             return
         }
         let dataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard error == nil, let data = data else {
                 DispatchQueue.main.async {
-                    completion(nil, error)
+                    if let completion = completion {
+                        completion(nil, error)
+                    }
                 }
                 return
             }
             
             photo.photoData = data
-            completion(data, nil)
-
+            if let completion = completion {
+                completion(data, nil)
+            }
         }
         dataTask.resume()
     }
