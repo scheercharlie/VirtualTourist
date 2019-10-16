@@ -43,14 +43,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         } catch {
             print("could not fetch")
         }
-        
-        DispatchQueue.global().async {
-            if let photos = self.fetchResultsController.fetchedObjects {
-                for photo in photos {
-                    FlickrAPIClient.fetchImageDataFor(photo, dataController: self.dataController, completion: nil)
-                }
-            }
-        }
+    
     }
     
     //Setup the collection view flow preferences
@@ -172,7 +165,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             }
         case .delete:
             if let indexPath = indexPath {
-                collectionView.deleteItems(at: [indexPath])
+//                collectionView.deleteItems(at: [indexPath])
                 print("delete")
             }
         default:

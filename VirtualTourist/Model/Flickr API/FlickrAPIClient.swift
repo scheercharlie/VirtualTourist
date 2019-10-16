@@ -76,7 +76,7 @@ class FlickrAPIClient {
     
     //Get URLS from the Flickr API
     //For the returned images, create photo entities and add urls to them
-    static func fetchImageURLS(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, page: Int, completion: @escaping (Bool, [Photo]?,  Error?) -> Void) {
+    static func fetchImageURLS(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, page: Int, completion: @escaping (Bool,  Error?) -> Void) {
         print("page in fetchimageurls \(page)")
         guard page != 0 else {
             //If this works add an alert to say no more images found
@@ -84,13 +84,11 @@ class FlickrAPIClient {
             return
         }
         
-        var photoArray: [Photo] = []
-        
         FlickrAPIClient.preformImageLocationSearch(from: mapAnnotation, page: page) { (success, response, error) in
             guard error == nil, let flickPhotoRepsonse = response else {
                 print("Could not fetch")
                 DispatchQueue.main.async {
-                    completion(false, nil, error)
+                    completion(false, error)
                 }
                 return
             }
@@ -103,7 +101,6 @@ class FlickrAPIClient {
                         newPhoto.url = url
                         newPhoto.page = Int16(page)
                         newPhoto.pin = mapAnnotation.pin
-                        print("added photo")
                         
                         print("new photo")
                         if dataController.viewContext.hasChanges {
@@ -118,7 +115,7 @@ class FlickrAPIClient {
                 }
             }
             DispatchQueue.main.async {
-                completion(true, photoArray, nil)
+                completion(true, nil)
             }
             
         }
