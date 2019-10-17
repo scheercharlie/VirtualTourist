@@ -21,6 +21,8 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     var collectionView: UICollectionView!
     var activityIndicator: UIActivityIndicatorView!
     
+    var objectChanges: [NSFetchedResultsChangeType : [IndexPath]]!
+    
     private let spacing: CGFloat = 5
     
     
@@ -44,6 +46,10 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             print("could not fetch")
         }
     
+        objectChanges = [:]
+        objectChanges[NSFetchedResultsChangeType.delete] = []
+        objectChanges[NSFetchedResultsChangeType.insert] = []
+        
     }
     
     //Setup the collection view flow preferences
@@ -156,43 +162,69 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
 
     //MARK: Fetched Results Controller Delegate Methods
 
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        
+    }
+    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            if let newIndexPath = newIndexPath {
-                collectionView.insertItems(at: [newIndexPath])
-                print("insert")
+        print(objectChanges)
+        if objectChanges != nil {
+            
+            
+            switch type {
+            case .insert:
+                if let newIndexPath = newIndexPath {
+                    objectChanges[NSFetchedResultsChangeType.insert]!.append(newIndexPath)
+                    print("insert")
+                }
+            case .delete:
+                if let indexPath = indexPath {
+                    print(indexPath)
+                    objectChanges[NSFetchedResultsChangeType.delete]!.append(indexPath)
+                    }
+                    print("delete")
+            default:
+                break
             }
-        case .delete:
-            if let indexPath = indexPath {
-//                collectionView.deleteItems(at: [indexPath])
-                print("delete")
-            }
-        default:
-            break
         }
     }
     
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        print("did change content")
+        print(objectChanges[NSFetchedResultsChangeType.delete]?.count)
+        if let deletes = objectChanges[NSFetchedResultsChangeType.delete] {
+            if deletes.count > 0 {
+                print("deletes count > 0")
+                collectionView.deleteItems(at: deletes)
+            }
+        }
+        
+        if let inserts = objectChanges[NSFetchedResultsChangeType.insert] {
+            if inserts.count > 0 {
+                collectionView.insertItems(at: inserts)
+            }
+        }
+        
+        objectChanges = nil
+    }
     func removeCurrentImages() {
         guard let imageArray = fetchResultsController.fetchedObjects else {
                 return
         }
     
-        let page = Int(imageArray.first!.page)
-    
         for image in imageArray {
+            print(imageArray.count)
             dataController.viewContext.delete(image)
             
-            do {
-                try dataController.viewContext.save()
-                print("saved")
-            } catch {
-                print("couldn't save")
-            }
+//            do {
+//                try dataController.viewContext.save()
+//                print("saved")
+//            } catch {
+//                print("couldn't save")
+//            }
             
         }
-        
-        fetchNewImages(page: page)
+//        fetchNewImages(page: page)
     }
     
     func fetchNewImages(page: Int) {

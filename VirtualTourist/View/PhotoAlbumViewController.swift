@@ -125,12 +125,25 @@ class PhotoAlbumViewController: UIViewController {
     @IBAction func reloadWasTapped(_ sender: Any) {
         print("reload was tapped")
         
-        collectionView.performBatchUpdates({
-            
-            self.collectionViewDelegate.removeCurrentImages()
-        
-            
-        }, completion: nil )
+        collectionViewDelegate.removeCurrentImages()
+//        
+//        collectionView.performBatchUpdates({
+//            if let deletes = collectionViewDelegate.objectChanges[NSFetchedResultsChangeType.delete] {
+//                if deletes.count > 0 {
+//                    print(deletes)
+////                    collectionView.deleteItems(at: deletes)
+//                }
+//            }
+////            if let inserts = collectionViewDelegate.objectChanges[NSFetchedResultsChangeType.insert] {
+////                if inserts.count > 0 {
+////                    collectionView.insertItems(at: inserts)
+////                }
+////            }
+////
+////            collectionViewDelegate.objectChanges = nil
+////
+////
+//        }, completion: nil )
     }
     
     
