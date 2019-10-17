@@ -124,26 +124,18 @@ class PhotoAlbumViewController: UIViewController {
     //Deleted the visible ceels
     @IBAction func reloadWasTapped(_ sender: Any) {
         print("reload was tapped")
+        let page: Int? = collectionViewDelegate.getCurrentPhotoPage()
         
         collectionViewDelegate.removeCurrentImages()
-//        
-//        collectionView.performBatchUpdates({
-//            if let deletes = collectionViewDelegate.objectChanges[NSFetchedResultsChangeType.delete] {
-//                if deletes.count > 0 {
-//                    print(deletes)
-////                    collectionView.deleteItems(at: deletes)
-//                }
-//            }
-////            if let inserts = collectionViewDelegate.objectChanges[NSFetchedResultsChangeType.insert] {
-////                if inserts.count > 0 {
-////                    collectionView.insertItems(at: inserts)
-////                }
-////            }
-////
-////            collectionViewDelegate.objectChanges = nil
-////
-////
-//        }, completion: nil )
+        
+        if page != nil {
+            collectionViewDelegate.fetchNewImages(page: page!)
+        } else {
+            print("no page could be found")
+        }
+        
+        
+        
     }
     
     

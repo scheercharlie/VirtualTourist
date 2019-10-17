@@ -190,23 +190,36 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("did change content")
-        print(objectChanges[NSFetchedResultsChangeType.delete]?.count)
         if let deletes = objectChanges[NSFetchedResultsChangeType.delete] {
             if deletes.count > 0 {
-                print("deletes count > 0")
                 collectionView.deleteItems(at: deletes)
+                objectChanges[NSFetchedResultsChangeType.delete] = []
             }
         }
         
         if let inserts = objectChanges[NSFetchedResultsChangeType.insert] {
             if inserts.count > 0 {
                 collectionView.insertItems(at: inserts)
+                objectChanges[NSFetchedResultsChangeType.insert] = []
             }
         }
         
-        objectChanges = nil
     }
+    
+    func getCurrentPhotoPage() -> Int? {
+        guard let imageArray = fetchResultsController.fetchedObjects else {
+            print("couldn't get images from FRC")
+            return nil
+        }
+        
+        guard let first = imageArray.first else {
+            print("no first object")
+            return nil
+        }
+        
+        return Int(first.page)
+    }
+    
     func removeCurrentImages() {
         guard let imageArray = fetchResultsController.fetchedObjects else {
                 return
@@ -215,16 +228,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         for image in imageArray {
             print(imageArray.count)
             dataController.viewContext.delete(image)
-            
-//            do {
-//                try dataController.viewContext.save()
-//                print("saved")
-//            } catch {
-//                print("couldn't save")
-//            }
-            
         }
-//        fetchNewImages(page: page)
     }
     
     func fetchNewImages(page: Int) {
