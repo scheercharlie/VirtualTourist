@@ -88,38 +88,12 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         }
 
         //Set background placeholder for Cell
-        //Create image view
-        //Get photo to set image
-//        cell.imageView.image = nil
         cell.backgroundColor = UIColor.lightGray
-//        let photo = fetchResultsController.object(at: indexPath)
-//
-//        //Prepare activity indicator and start animating
-//        vc.startAnimating(true)
-//
-//        //If the photo does not have data saved
-//        //Use the Flickr api to fetch data for the image and save it
-//        //Convert downloaded data to image and display in cell
-//        if photo.photoData == nil {
-//            DispatchQueue.global().async {
-//                FlickrAPIClient.fetchImageDataFor(photo, dataController: self.dataController, completion: {[weak self] (data, error) in
-//                    if let data = data {
-//                        self!.setImageForCellFromImageData(data, imageView: cell.imageView, cell: cell)
-//
-//                    }
-//                })
-//            }
-//
-//        //If photo has image data already, convert data to image and display it
-//        } else {
-//            setImageForCellFromImageData(photo.photoData!, imageView:
-//                cell.imageView, cell: cell)
-//        }
-//
+
+        //Get photo to set image
         let image = imageTasks[indexPath.row]?.image
-        print(imageTasks.count)
         cell.imageView.image = image
-        vc.startAnimating(false)
+
         return cell
     }
     
@@ -130,27 +104,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         imageTasks[indexPath.row]?.pause()
     }
-    
-    fileprivate func setImageForCellFromImageData(_ data: Data, imageView: UIImageView, cell: CollectionViewCell) {
-        DispatchQueue.main.async {
-            if let image = UIImage(data: data) {
-                cell.imageView.image = image
-            }
-            
-            self.vc.startAnimating(false)
-        }
-    }
-    
-    fileprivate func startAnimating(_ activityIndicator: UIActivityIndicatorView, _ bool: Bool) {
-        if bool {
-            activityIndicator.startAnimating()
-            vc.reloadButton.isEnabled = false
-        } else {
-            activityIndicator.stopAnimating()
-            vc.reloadButton.isEnabled = true
-        }
-    }
-    
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let object = fetchResultsController.object(at: indexPath)
@@ -269,7 +222,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         DispatchQueue.main.async {
             self.setupImageTasks(totalImages: totalImages)
             self.collectionView?.reloadData()
-//            self.activityIndicator.stopAnimating()
+            self.vc.startAnimating(false)
         }
     }
         
