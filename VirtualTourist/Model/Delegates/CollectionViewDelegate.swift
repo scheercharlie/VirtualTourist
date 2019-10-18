@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import CoreData
 
-class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, NSFetchedResultsControllerDelegate {
+class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, NSFetchedResultsControllerDelegate, ImageTaskDownloadedDelegate {
     
     //MARK: Properties
     var flowLayout: UICollectionViewFlowLayout!
@@ -20,11 +20,10 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     var fetchResultsController: NSFetchedResultsController<Photo>!
     var collectionView: UICollectionView!
     var activityIndicator: UIActivityIndicatorView!
-    
     var objectChanges: [NSFetchedResultsChangeType : [IndexPath]]!
     
     private let spacing: CGFloat = 5
-    
+    var imageTasks = [Int: ImageTask]()
     
     //MARK: Initilization
     init(flowLayout: UICollectionViewFlowLayout, mapAnnotation: VirtualTouristMapAnnotation, fetchRequest: NSFetchRequest<Photo>, dataController: DataController, viewController: PhotoAlbumViewController, collectionView: UICollectionView) {
@@ -44,6 +43,15 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             try fetchResultsController.performFetch()
         } catch {
             print("could not fetch")
+        }
+        
+        if fetchResultsController.fetchedObjects!.count > 0 {
+            let first = fetchResultsController.fetchedObjects!.first!
+            let page = Int(first.page)
+            
+            fetchNewImages(page: page)
+        } else {
+            fetchNewImages(page: 1)
         }
     
         objectChanges = [:]
@@ -82,33 +90,45 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         //Set background placeholder for Cell
         //Create image view
         //Get photo to set image
+//        cell.imageView.image = nil
         cell.backgroundColor = UIColor.lightGray
-        let photo = fetchResultsController.object(at: indexPath)
-        
-        //Prepare activity indicator and start animating
-        vc.startAnimating(true)
-
-        //If the photo does not have data saved
-        //Use the Flickr api to fetch data for the image and save it
-        //Convert downloaded data to image and display in cell
-        if photo.photoData == nil {
-            DispatchQueue.global().async {
-                FlickrAPIClient.fetchImageDataFor(photo, dataController: self.dataController, completion: {[weak self] (data, error) in
-                    if let data = data {
-                        self!.setImageForCellFromImageData(data, imageView: cell.imageView, cell: cell)
-                        
-                    }
-                })
-            }
-            
-        //If photo has image data already, convert data to image and display it
-        } else {
-            setImageForCellFromImageData(photo.photoData!, imageView:
-                cell.imageView, cell: cell)
-        }
-        
+//        let photo = fetchResultsController.object(at: indexPath)
+//
+//        //Prepare activity indicator and start animating
+//        vc.startAnimating(true)
+//
+//        //If the photo does not have data saved
+//        //Use the Flickr api to fetch data for the image and save it
+//        //Convert downloaded data to image and display in cell
+//        if photo.photoData == nil {
+//            DispatchQueue.global().async {
+//                FlickrAPIClient.fetchImageDataFor(photo, dataController: self.dataController, completion: {[weak self] (data, error) in
+//                    if let data = data {
+//                        self!.setImageForCellFromImageData(data, imageView: cell.imageView, cell: cell)
+//
+//                    }
+//                })
+//            }
+//
+//        //If photo has image data already, convert data to image and display it
+//        } else {
+//            setImageForCellFromImageData(photo.photoData!, imageView:
+//                cell.imageView, cell: cell)
+//        }
+//
+        let image = imageTasks[indexPath.row]?.image
+        print(imageTasks.count)
+        cell.imageView.image = image
         vc.startAnimating(false)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        imageTasks[indexPath.row]?.resume()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        imageTasks[indexPath.row]?.pause()
     }
     
     fileprivate func setImageForCellFromImageData(_ data: Data, imageView: UIImageView, cell: CollectionViewCell) {
@@ -228,10 +248,41 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         FlickrAPIClient.fetchImageURLS(mapAnnotation: mapAnnotation, dataController: dataController, page: newPage) { (success, error) in
             if success {
                 print("should have new photo urls")
+                try? self.fetchResultsController.performFetch()
+                //TO DO handle the force unwrap later
+                self.finishedFetchingImagesInfo(totalImages: self.fetchResultsController.fetchedObjects!.count)
             } else {
                 print("failed")
             }
             print("end of fetch new images")
+        }
+    }
+    
+    
+    //MARK: ImageTaskDownloadedDelegate Methods
+    
+    func imageDownloaded(position: Int) {
+        self.collectionView?.reloadItems(at: [IndexPath(row: position, section: 0)])
+    }
+      
+    private func finishedFetchingImagesInfo(totalImages: Int) {
+        DispatchQueue.main.async {
+            self.setupImageTasks(totalImages: totalImages)
+            self.collectionView?.reloadData()
+//            self.activityIndicator.stopAnimating()
+        }
+    }
+        
+    private func setupImageTasks(totalImages: Int) {
+        let session = URLSession(configuration: URLSessionConfiguration.default)
+        
+        for i in 0..<totalImages {
+            let indexPath = IndexPath(row: i, section: 0)
+            let photo = fetchResultsController.object(at: indexPath)
+            if let url = photo.url {
+                let imageTask = ImageTask(position: i, url: url, session: session, delegate: self)
+                imageTasks[i] = imageTask
+            }
         }
     }
 }
