@@ -52,6 +52,6 @@ struct JSONPhotoProperty: Codable {
         case ispublic
         case isfriend
         case isfamily
-        case url = "url_o"
+        case url = "url_m"
     }
 }

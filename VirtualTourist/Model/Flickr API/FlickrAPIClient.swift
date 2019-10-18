@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 import CoreData
 
+let flickrAPIClient = FlickrAPIClient()
+
 class FlickrAPIClient {
     static let apiKey = "8b463f94bbb5f9d350f7092dcd3753f6"
     
@@ -23,7 +25,7 @@ class FlickrAPIClient {
         
         var stringValue: String {
             switch self {
-            case .getPhotos(let lat, let lon, let page): return endPoints.baseURL + endPoints.api_key_param + "&lat=" + String(lat) + "&lon=" + String(lon) + "&extras=url_o" +  "&per_page=30" + "&page=\(page ?? 0)" + "&format=json&nojsoncallback=1"
+            case .getPhotos(let lat, let lon, let page): return endPoints.baseURL + endPoints.api_key_param + "&lat=" + String(lat) + "&lon=" + String(lon) + "&extras=url_m" +  "&per_page=30" + "&page=\(page ?? 0)" + "&format=json&nojsoncallback=1"
                 
             }
         }
@@ -35,7 +37,7 @@ class FlickrAPIClient {
     
     //MARK: API Get requests
     //Generic Get request
-    private class func taskForGetRequest<ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, completion: @escaping (Bool, ResponseType?, Error?) -> Void) {
+    private func taskForGetRequest<ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, completion: @escaping (Bool, ResponseType?, Error?) -> Void) {
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -76,7 +78,7 @@ class FlickrAPIClient {
     
     //Get URLS from the Flickr API
     //For the returned images, create photo entities and add urls to them
-    static func fetchImageURLS(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, page: Int, completion: @escaping (Bool,  Error?) -> Void) {
+    func fetchImageURLS(mapAnnotation: VirtualTouristMapAnnotation, dataController: DataController, page: Int, completion: @escaping (Bool,  Error?) -> Void) {
         print("page in fetchimageurls \(page)")
         guard page != 0 else {
             //If this works add an alert to say no more images found
@@ -84,7 +86,7 @@ class FlickrAPIClient {
             return
         }
         
-        FlickrAPIClient.preformImageLocationSearch(from: mapAnnotation, page: page) { (success, response, error) in
+        flickrAPIClient.preformImageLocationSearch(from: mapAnnotation, page: page) { (success, response, error) in
             guard error == nil, let flickPhotoRepsonse = response else {
                 print("Could not fetch")
                 DispatchQueue.main.async {
@@ -123,7 +125,7 @@ class FlickrAPIClient {
     
     
     //Get URLS from the Flickr API
-    static private func preformImageLocationSearch(from mapAnnotation: VirtualTouristMapAnnotation, page: Int, completion: @escaping (Bool, FlickrAPIPhotosSearchResonse?, Error?) -> Void) {
+    private func preformImageLocationSearch(from mapAnnotation: VirtualTouristMapAnnotation, page: Int, completion: @escaping (Bool, FlickrAPIPhotosSearchResonse?, Error?) -> Void) {
         let latitude = mapAnnotation.pin.latitude
         let longitude = mapAnnotation.pin.longitude
         
@@ -144,7 +146,7 @@ class FlickrAPIClient {
     
     //MARK: Image management Functions
     //Fetch image data for the URLS saved in a photo entity
-    static func fetchImageDataFor(_ photo: Photo, dataController: DataController, completion: ((Data?, Error?) -> Void)? = nil) {
+    func fetchImageDataFor(_ photo: Photo, dataController: DataController, completion: ((Data?, Error?) -> Void)? = nil) {
         
         guard let url = photo.url else {
             print("No valid url found")

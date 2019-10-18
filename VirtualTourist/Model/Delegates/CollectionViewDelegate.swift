@@ -198,7 +198,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     
     func fetchNewImages(page: Int) {
         let newPage = page + 1
-        FlickrAPIClient.fetchImageURLS(mapAnnotation: mapAnnotation, dataController: dataController, page: newPage) { (success, error) in
+        flickrAPIClient.fetchImageURLS(mapAnnotation: mapAnnotation, dataController: dataController, page: newPage) { (success, error) in
             if success {
                 print("should have new photo urls")
                 try? self.fetchResultsController.performFetch()

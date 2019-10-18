@@ -123,7 +123,7 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
                                         managedObjectContext: self!.dataController.viewContext)
                 
                 //Fetch and save Image URLS for the newly created Pin
-                FlickrAPIClient.fetchImageURLS(mapAnnotation: mapAnnotation, dataController: self!.dataController, page: page) { (success, error) in
+                flickrAPIClient.fetchImageURLS(mapAnnotation: mapAnnotation, dataController: self!.dataController, page: page) { (success, error) in
                     if success {
                         print("should have saved urls")
                     } else {
