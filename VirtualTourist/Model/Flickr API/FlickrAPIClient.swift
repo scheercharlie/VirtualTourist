@@ -25,7 +25,7 @@ class FlickrAPIClient {
         
         var stringValue: String {
             switch self {
-            case .getPhotos(let lat, let lon, let page): return endPoints.baseURL + endPoints.api_key_param + "&lat=" + String(lat) + "&lon=" + String(lon) + "&extras=url_m" +  "&per_page=30" + "&page=\(page ?? 0)" + "&format=json&nojsoncallback=1"
+            case .getPhotos(let lat, let lon, let page): return endPoints.baseURL + endPoints.api_key_param + "&lat=" + String(lat) + "&lon=" + String(lon) + "&extras=url_m" +  "&per_page=20" + "&page=\(page ?? 0)" + "&format=json&nojsoncallback=1"
                 
             }
         }
@@ -104,11 +104,9 @@ class FlickrAPIClient {
                         newPhoto.page = Int16(page)
                         newPhoto.pin = mapAnnotation.pin
                         
-                        print("new photo")
                         if dataController.viewContext.hasChanges {
                             do {
                                 try dataController.viewContext.save()
-                                print("saved")
                             } catch {
                                 print("couldn't save")
                             }

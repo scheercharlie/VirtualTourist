@@ -23,8 +23,6 @@ struct MapLocation: Codable {
         self.latitude = Double(coordinate.latitude)
         self.longitudeDelta = Double(span.longitudeDelta)
         self.latitudeDelta = Double(span.latitudeDelta)
-        
-        print(longitude, latitude, longitudeDelta, latitudeDelta)
     }
     
     init(fromMapView mapView: MKMapView) {

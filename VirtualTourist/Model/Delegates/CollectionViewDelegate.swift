@@ -46,10 +46,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         }
         
         if fetchResultsController.fetchedObjects!.count > 0 {
-            let first = fetchResultsController.fetchedObjects!.first!
-            let page = Int(first.page)
-            
-            fetchNewImages(page: page)
+            finishedFetchingImagesInfo(totalImages: fetchResultsController.fetchedObjects!.count)
         } else {
             fetchNewImages(page: 1)
         }
@@ -119,7 +116,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
         let numberOfItemsPerRow: CGFloat = 3
         let spacingBetweenItems: CGFloat = 5
         let totalSpacing = (2 * self.spacing) + ((numberOfItemsPerRow - 1) * spacingBetweenItems)
-        //TO DO Fix the spacing to automatically size
         let width = (collectionView.bounds.width - totalSpacing) / numberOfItemsPerRow
         return CGSize(width: 100, height: 100)
     }
@@ -132,7 +128,7 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        print(objectChanges)
+
         if objectChanges != nil {
             
             
@@ -140,14 +136,12 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             case .insert:
                 if let newIndexPath = newIndexPath {
                     objectChanges[NSFetchedResultsChangeType.insert]!.append(newIndexPath)
-                    print("insert")
                 }
             case .delete:
                 if let indexPath = indexPath {
                     print(indexPath)
                     objectChanges[NSFetchedResultsChangeType.delete]!.append(indexPath)
                     }
-                    print("delete")
             default:
                 break
             }
@@ -202,7 +196,6 @@ class CollectionViewDelegate: NSObject, UICollectionViewDelegate, UICollectionVi
             if success {
                 print("should have new photo urls")
                 try? self.fetchResultsController.performFetch()
-                //TO DO handle the force unwrap later
                 self.finishedFetchingImagesInfo(totalImages: self.fetchResultsController.fetchedObjects!.count)
             } else {
                 print("failed")

@@ -56,6 +56,12 @@ class TravelLocationsViewController: UIViewController, UIGestureRecognizerDelega
                 } catch {
                     print("Could not save new Photo")
                 }
+                
+                do {
+                    try self.dataController.backgroundContext.save()
+                } catch {
+                    print("Could not save new Photo")
+                }
             }
         }
     }

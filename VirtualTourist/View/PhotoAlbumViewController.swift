@@ -61,6 +61,12 @@ class PhotoAlbumViewController: UIViewController {
         } catch {
             print("Could not save")
         }
+        
+        do {
+            try dataController.viewContext.save()
+        } catch {
+            print("Could not save")
+        }
 
     }
     

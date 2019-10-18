@@ -60,7 +60,6 @@ class MapViewDelegate: NSObject, MKMapViewDelegate, NSFetchedResultsControllerDe
     //When a pin is selected:
     //Transition to the PhotoAlbumViewController
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        print("pin selected")
         viewController.performSegue(withIdentifier: constants.showPhotoAlbum, sender: self)
     }
     
